@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.9.34723.18
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LiftingStationRevitFeeder.Domain", "LiftingStationRevitFeeder.Domain\LiftingStationRevitFeeder.Domain.csproj", "{4A5543BF-DA9C-4823-8130-3F7A0B97ACA5}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LiftingStationRevitFeeder.Domain.Test", "LiftingStationRevitFeeder.Domain.Test\LiftingStationRevitFeeder.Domain.Test.csproj", "{252A59B4-5DE2-49D5-B561-A62426DCFF76}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{4A5543BF-DA9C-4823-8130-3F7A0B97ACA5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4A5543BF-DA9C-4823-8130-3F7A0B97ACA5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4A5543BF-DA9C-4823-8130-3F7A0B97ACA5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4A5543BF-DA9C-4823-8130-3F7A0B97ACA5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{252A59B4-5DE2-49D5-B561-A62426DCFF76}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{252A59B4-5DE2-49D5-B561-A62426DCFF76}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{252A59B4-5DE2-49D5-B561-A62426DCFF76}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{252A59B4-5DE2-49D5-B561-A62426DCFF76}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {E83852A8-2F89-40FE-BF62-D4FDEB668DD8}
+	EndGlobalSection
+EndGlobal

@@ -1,0 +1,16 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="MeasurementUnits.NET" Version="1.58.0" />
+    <PackageReference Include="PlantGraph.Media.HydraulicProperties" Version="18.12.31" />
+    <PackageReference Include="Transcend.HydraulicLogic.Client" Version="1.0.2.38" />
+    <PackageReference Include="Transcend.HydraulicLogic.Contract" Version="1.0.2.38" />
+  </ItemGroup>
+
+</Project>
