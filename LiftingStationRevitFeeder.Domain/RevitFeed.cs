@@ -1,4 +1,5 @@
-﻿using MeasurementUnits.NET;
+﻿using HydraulicLogic.Contract.DistributionChannelSizes.GetDistributionChannelSizes;
+using MeasurementUnits.NET;
 using System.Net;
 
 namespace LiftingStationRevitFeeder.Domain
@@ -79,13 +80,17 @@ namespace LiftingStationRevitFeeder.Domain
             Flow = DesignPeakHourFlow / DutyPumpsCount.Value;
             NumberOfPumps = DutyPumpsCount.Value + StandbyPumpsCount.Value;
             DN1 = GetSuctionDiameter();
+            DN2 = GetDischargeDiameter(DN1);
         }
 
-        private Length GetSuctionDiameter()
-        {
-            var dn1 = new Length(Math.Max(0.065, Math.Sqrt((Flow.GetValue("m3 s-1") / Math.PI / 4) * PumpIntakeVelocity.GetValue("m s-1"))));
-            return new Length(dn1.CopyConvertTo("mm"));
-        }
+
+        private Length GetSuctionDiameter() =>
+            new Length(new Length(Math.Max(0.065, Math.Sqrt((Flow.GetValue("m3 s-1") / Math.PI / 4)
+                * PumpIntakeVelocity.GetValue("m s-1")))).CopyConvertTo("mm")).GetStandardDiameter();
+
+        private static Length? GetDischargeDiameter(Length suctionDiameter) => suctionDiameter <  new Length(150, "mm")
+                ? suctionDiameter.GetLastSmallerDiameter()
+                : new Length(Math.Min(suctionDiameter.GetValue("mm"), 400), "mm");
     }
 
 }
