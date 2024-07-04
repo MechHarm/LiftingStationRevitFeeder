@@ -62,6 +62,7 @@ namespace LiftingStationRevitFeeder.Domain
         public Length? DimW { get; private set; }
         public Length MinLSWallDistanceX { get; private set; }
         public Length MinLSWallDistanceY { get; private set; }
+        public string MeasurementRange { get; private set; }
 
 
         public RevitFeed(
@@ -117,7 +118,8 @@ namespace LiftingStationRevitFeeder.Domain
                             Length? dimZ,
                             Length? dimW,
                             Length? minLSWallDistanceX,
-                            Length? minLSWallDistanceY
+                            Length? minLSWallDistanceY,
+                            string measurementRange
                         )
         {
             DesignPeakHourFlow = designPeakHourFlow;
@@ -176,7 +178,7 @@ namespace LiftingStationRevitFeeder.Domain
             //DimY = dimY ?? Civil Requirement > MinLSWallDistanceY
             DimZ = dimZ ?? GetPumpDimensionZ();
             DimW = dimW ?? DimN + DimO + DimP + DimQ + DimU + DimV + DimR;
-            DimX = DimW;
+            MeasurementRange = new String($"0 - {(Flow.GetValue("m3 h-1") * 1.1):F0} CMH");
         }
 
 

@@ -17,7 +17,7 @@ namespace LiftingStationRevitFeeder.Domain.Test
             var standbyPumpsCount = 2;
 
             // act
-            var sut = new RevitFeed(designPeakHourFlow, head, pumpInletVelocity,null, null, dutyPumpsCount, standbyPumpsCount, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null);
+            var sut = new RevitFeed(designPeakHourFlow, head, pumpInletVelocity,null, null, dutyPumpsCount, standbyPumpsCount, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null);
 
             // assert
             sut.Should().NotBeNull();
@@ -67,7 +67,7 @@ namespace LiftingStationRevitFeeder.Domain.Test
             var head = new Length(5, "m");
 
             // act
-            var sut = new RevitFeed(designPeakHourFlow, head, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null);
+            var sut = new RevitFeed(designPeakHourFlow, head, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null);
 
             // assert
             sut.Should().NotBeNull();
