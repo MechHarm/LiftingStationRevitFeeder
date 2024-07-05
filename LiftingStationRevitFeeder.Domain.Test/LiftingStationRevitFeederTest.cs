@@ -10,27 +10,24 @@ namespace LiftingStationRevitFeeder.Domain.Test
         public void LiftingStationRevitFeederTest_WhenBaseparameters_ExpectedValuesAreSet()
         {
             // arrange
-            var designPeakHourFlow = new VolumetricFlow(500, "m3 h-1");
+            var designPeakHourFlow = new VolumetricFlow(250, "m3 h-1");
             var head = new Length(5, "m");
-            var pumpInletVelocity = new Velocity(2, "m s-1");
-            var dutyPumpsCount = 2;
-            var standbyPumpsCount = 2;
 
             // act
-            var sut = new RevitFeed(designPeakHourFlow, head, pumpInletVelocity,null, null, dutyPumpsCount, standbyPumpsCount, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null);
+            var sut = RevitFeed.CreateBase(designPeakHourFlow, head);
 
             // assert
             sut.Should().NotBeNull();
-            sut.Flow.GetValue().Should().BeApproximately(250, 0.1);
-            sut.NumberOfPumps.Should().Be(4);
-            sut.PumpInletVelocity.GetValue().Should().BeApproximately(2, 0.001);
+            sut.PumpSelector.Flow.GetValue().Should().BeApproximately(250, 0.1);
+            sut.PumpSelector.NumberOfPumps.Should().Be(2);
+            sut.PumpSelector.PumpInletVelocity.GetValue().Should().BeApproximately(1.7, 0.001);
             sut.DN1.GetValue().Should().Be(250);
             sut.DN2.GetValue().Should().Be(250);
             sut.DN3.GetValue().Should().Be(250);
-            sut.DN4.GetValue().Should().Be(300);
-            sut.DN5.GetValue().Should().Be(250);
+            sut.DN4.GetValue().Should().Be(250);
+            sut.DN5.GetValue().Should().Be(200);
             sut.DNBreath.GetValue().Should().Be(250);
-            sut.DNInlet.GetValue().Should().Be(550);
+            sut.DNInlet.GetValue().Should().Be(400);
             sut.DNBackflow.GetValue().Should().Be(250);
             sut.DimA.GetValue().Should().Be(250);
             sut.DimB.GetValue().Should().Be(1700);
@@ -49,14 +46,14 @@ namespace LiftingStationRevitFeeder.Domain.Test
             sut.DimO.GetValue().Should().Be(860);
             sut.DimP.GetValue().Should().Be(1220);
             sut.DimQ.GetValue().Should().Be(860);
-            sut.DimR.GetValue().Should().Be(960);
-            sut.DimS.GetValue().Should().Be(450);
-            sut.DimT.GetValue().Should().Be(1110);
+            sut.DimR.GetValue().Should().Be(935);
+            sut.DimS.GetValue().Should().Be(375);
+            sut.DimT.GetValue().Should().Be(1035);
             sut.DimU.GetValue().Should().Be(400);
             sut.DimV.GetValue().Should().Be(400);
-            sut.DimZ.GetValue().Should().Be(9300);
-            sut.DimW.GetValue().Should().Be(5700);
-            sut.MinLSWallDistanceX.GetValue().Should().Be(7000);
+            sut.DimZ.GetValue().Should().Be(5650);
+            sut.DimW.GetValue().Should().Be(5675);
+            sut.MinLSWallDistanceX.GetValue().Should().Be(3900);
             sut.MinLSWallDistanceY.GetValue().Should().Be(2860);
         }
         [Test]
@@ -71,9 +68,9 @@ namespace LiftingStationRevitFeeder.Domain.Test
 
             // assert
             sut.Should().NotBeNull();
-            sut.Flow.GetValue().Should().BeApproximately(100, 0.1);
-            sut.NumberOfPumps.Should().Be(2);
-            sut.PumpInletVelocity.GetValue().Should().BeApproximately(1.7, 0.001);
+            sut.PumpSelector.Flow.GetValue().Should().BeApproximately(100, 0.1);
+            sut.PumpSelector.NumberOfPumps.Should().Be(2);
+            sut.PumpSelector.PumpInletVelocity.GetValue().Should().BeApproximately(1.7, 0.001);
             sut.DN1.GetValue().Should().Be(150);
             sut.DN2.GetValue().Should().Be(150);
             sut.DN3.GetValue().Should().Be(150);
@@ -97,7 +94,7 @@ namespace LiftingStationRevitFeeder.Domain.Test
             sut.DimM.GetValue().Should().Be(225);
             sut.DimN.GetValue().Should().Be(1000);
             sut.DimO.GetValue().Should().Be(720);
-            sut.DimP.GetValue().Should().Be(440);
+            sut.DimP.GetValue().Should().Be(940);
             sut.DimQ.GetValue().Should().Be(720);
             sut.DimR.GetValue().Should().Be(885);
             sut.DimS.GetValue().Should().Be(225);
@@ -105,7 +102,7 @@ namespace LiftingStationRevitFeeder.Domain.Test
             sut.DimU.GetValue().Should().Be(400);
             sut.DimV.GetValue().Should().Be(400);
             sut.DimZ.GetValue().Should().Be(4400);
-            sut.DimW.GetValue().Should().Be(4565);
+            sut.DimW.GetValue().Should().Be(5065);
             sut.MinLSWallDistanceX.GetValue().Should().Be(3600);
             sut.MinLSWallDistanceY.GetValue().Should().Be(2240);
         }

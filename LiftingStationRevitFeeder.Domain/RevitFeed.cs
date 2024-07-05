@@ -6,15 +6,16 @@ namespace LiftingStationRevitFeeder.Domain
 {
     public class RevitFeed
     {
-        public VolumetricFlow DesignPeakHourFlow { get; private set; }
-        public int? DutyPumpsCount { get; private set; }
-        public int? StandbyPumpsCount { get; private set; }
-        public int NumberOfPumps { get; private set; }
-        public VolumetricFlow Flow { get; private set; }
-        public Length Head { get; private set; }
-        public Velocity? PumpInletVelocity { get; private set; }
-        public Velocity? PressurizedPipeVelocity { get; private set; }
-        public Velocity? GravityPipeVelocity { get; private set; }
+        public PumpSelector PumpSelector { get; private set; }
+        //public VolumetricFlow DesignPeakHourFlow { get; private set; }
+        //public int? DutyPumpsCount { get; private set; }
+        //public int? StandbyPumpsCount { get; private set; }
+        //public int NumberOfPumps { get; private set; }
+        //public VolumetricFlow Flow { get; private set; }
+        //public Length Head { get; private set; }
+        //public Velocity? PumpInletVelocity { get; private set; }
+        //public Velocity? PressurizedPipeVelocity { get; private set; }
+        //public Velocity? GravityPipeVelocity { get; private set; }
         public Length? DN1 { get; private set; }
         public Length? DN2 { get; private set; }
         public Length? DN3 { get; private set; }
@@ -65,72 +66,138 @@ namespace LiftingStationRevitFeeder.Domain
         public string MeasurementRange { get; private set; }
 
 
+        public static RevitFeed CreateBase(VolumetricFlow designPeakHourFlow, Length head)
+        {
+            var pumpSelection = PumpSelector.Create(designPeakHourFlow, head);
+            return new RevitFeed(designPeakHourFlow, head);
+        }
+        protected RevitFeed(VolumetricFlow designPeakHourFlow, Length head)
+        {
+            PumpSelector = PumpSelector.Create(designPeakHourFlow, head);
+            //DesignPeakHourFlow = designPeakHourFlow;
+            //Head = head;
+            //PumpInletVelocity =  new Velocity(1.7, "m s-1");
+            //PressurizedPipeVelocity =  new Velocity(2, "m s-1");
+            //GravityPipeVelocity =  new Velocity(0.6, "m s-1");
+            //DutyPumpsCount =  1;
+            //StandbyPumpsCount =  1;
+            //Flow = DesignPeakHourFlow / DutyPumpsCount.Value;
+            //NumberOfPumps = DutyPumpsCount.Value + StandbyPumpsCount.Value;
+            DN1 = GetSuctionDiameter();
+            DN2 = GetDischargeDiameter(DN1);
+            DN3 = GetFeederDiameter();
+            DN4 = GetRisingMainDiameter();
+            DN5 = GetFlowmeterDiameter();
+            DNBreath = DN2;
+            DNInlet = GetGravityMainDiameter();
+            DNBackflow = DN2;
+            Freeboard = new Length(500, "mm");
+            LevA = new Length(1000, "mm");
+            LevB = new Length(500, "mm");
+            LevC = new Length(500, "mm");
+            LevD = new Length(500, "mm");
+            LevE = new Length(500, "mm");
+            LevF = new Length(500, "mm");
+            LevG = new Length(500, "mm");
+            LevH = new Length(500, "mm");
+            LevI = new Length(500, "mm");
+            WetWellDepth = LevA + LevB + LevC + LevD + LevE + LevF + LevG + LevH + LevI;
+            DimA = GetPumpDimensionA();
+            DimB = GetPumpDimensionB();
+            DimC = GetPumpDimensionC();
+            DimD = GetPumpDimensionD();
+            DimF = GetPumpDimensionF();
+            DimG = DimF + DN2;
+            DimH = GetPumpDimensionH();
+            DimI = GetPumpDimensionI();
+            DimE = DimI * 1.6;
+            DimJ = GetPumpDimensionJ();
+            DimK = new Length(800, "mm");
+            DimL = new Length(800, "mm");
+            DimM = DN3 * 1.5;
+            DimN = new Length(1000, "mm");
+            DimO = GetPumpDimensionO();
+            DimP = GetPumpDimensionP();
+            DimQ = DimO;
+            DimR = GetPumpDimensionR();
+            DimS = DN4 * 1.5;
+            DimT = GetPumpDimensionT();
+            DimU = new Length(400, "mm");
+            DimV = new Length(400, "mm");
+            MinLSWallDistanceX = GetMinimumLSWallDistanceX();
+            MinLSWallDistanceY = GetMinimumLSWallDistanceY();
+            //DimX = dimX ?? Civil Requirement > MinLSWallDistanceX
+            //DimY = dimY ?? Civil Requirement > MinLSWallDistanceY
+            DimZ = GetPumpDimensionZ();
+            DimW = DimN + DimO + DimP + DimQ + DimU + DimV + DimR;
+            MeasurementRange = new String($"0 - {(PumpSelector.Flow.GetValue("m3 h-1") * 1.1):F0} CMH");
+        }
         public RevitFeed(
                             VolumetricFlow designPeakHourFlow,
                             Length head,
                             Velocity? pumpInletVelocity,
                             Velocity? pressurizedPipeVelocity,
                             Velocity? gravityPipeVelocity,
-                            int? dutyPumpsCount,
-                            int? standbyPumpsCount,
-                            Length? dn1,
-                            Length? dn2,
-                            Length? dn3,
-                            Length? dn4,
-                            Length? dn5,
-                            Length? dnBreath,
-                            Length? dnInlet,
-                            Length? dnBackflow,
-                            Length? freeboard,
-                            Length? levA,
-                            Length? levB,
-                            Length? levC,
-                            Length? levD,
-                            Length? levE,
-                            Length? levF,
-                            Length? levG,
-                            Length? levH,
-                            Length? levI,
-                            Length? dimA,
-                            Length? dimB,
-                            Length? dimC,
-                            Length? dimD,
-                            Length? dimE,
-                            Length? dimF,
-                            Length? dimG,
-                            Length? dimH,
-                            Length? dimI,
-                            Length? dimJ,
-                            Length? dimK,
-                            Length? dimL,
-                            Length? dimM,
-                            Length? dimN,
-                            Length? dimO,
-                            Length? dimP,
-                            Length? dimQ,
-                            Length? dimR,
-                            Length? dimS,
-                            Length? dimT,
-                            Length? dimU,
-                            Length? dimV,
-                            Length? dimX,
-                            Length? dimY,
-                            Length? dimZ,
-                            Length? dimW,
-                            Length? minLSWallDistanceX,
-                            Length? minLSWallDistanceY,
-                            string measurementRange
-                        )
+                            int? dutyPumpsCount = 1,
+                            int? standbyPumpsCount = 1,
+                            Length? dn1 = default,
+                            Length? dn2 = default,
+                            Length? dn3 = default,
+                            Length? dn4 = default,
+                            Length? dn5 = default,
+                            Length? dnBreath = default,
+                            Length? dnInlet = default,
+                            Length? dnBackflow = default,
+                            Length? freeboard = default,
+                            Length? levA = default,
+                            Length? levB = default,
+                            Length? levC = default,
+                            Length? levD = default,
+                            Length? levE = default,
+                            Length? levF = default,
+                            Length? levG = default,
+                            Length? levH = default,
+                            Length? levI = default,
+                            Length? dimA = default,
+                            Length? dimB = default,
+                            Length? dimC = default,
+                            Length? dimD = default,
+                            Length? dimE = default,
+                            Length? dimF = default,
+                            Length? dimG = default,
+                            Length? dimH = default,
+                            Length? dimI = default,
+                            Length? dimJ = default,
+                            Length? dimK = default,
+                            Length? dimL = default,
+                            Length? dimM = default,
+                            Length? dimN = default,
+                            Length? dimO = default,
+                            Length? dimP = default,
+                            Length? dimQ = default,
+                            Length? dimR = default,
+                            Length? dimS = default,
+                            Length? dimT = default,
+                            Length? dimU = default,
+                            Length? dimV = default,
+                            Length? dimX = default,
+                            Length? dimY = default,
+                            Length? dimZ = default,
+                            Length? dimW = default,
+                            Length? minLSWallDistanceX = default,
+                            Length? minLSWallDistanceY = default,
+                            string measurementRange = default
+                        ) : this(designPeakHourFlow, head)
         {
-            DesignPeakHourFlow = designPeakHourFlow;
-            Head = head;
-            PumpInletVelocity = pumpInletVelocity ?? new Velocity(1.7, "m s-1");
-            PressurizedPipeVelocity = pressurizedPipeVelocity ?? new Velocity(2, "m s-1");
-            GravityPipeVelocity = gravityPipeVelocity ?? new Velocity(0.6, "m s-1");
-            DutyPumpsCount = dutyPumpsCount ?? 1;
-            StandbyPumpsCount = standbyPumpsCount ?? 1;
-            Flow = DesignPeakHourFlow / DutyPumpsCount.Value;
-            NumberOfPumps = DutyPumpsCount.Value + StandbyPumpsCount.Value;
+
+            PumpSelector = PumpSelector.Create(designPeakHourFlow, head, dutyPumpsCount, standbyPumpsCount, pumpInletVelocity, gravityPipeVelocity, pressurizedPipeVelocity);
+            //PumpInletVelocity = pumpInletVelocity ?? new Velocity(1.7, "m s-1");
+            //PressurizedPipeVelocity = pressurizedPipeVelocity ?? new Velocity(2, "m s-1");
+            //GravityPipeVelocity = gravityPipeVelocity ?? new Velocity(0.6, "m s-1");
+            //DutyPumpsCount = dutyPumpsCount ?? 1;
+            //StandbyPumpsCount = standbyPumpsCount ?? 1;
+            //Flow = DesignPeakHourFlow / DutyPumpsCount.Value;
+            //NumberOfPumps = DutyPumpsCount.Value + StandbyPumpsCount.Value;
             DN1 = dn1 ?? GetSuctionDiameter();
             DN2 = dn2 ?? GetDischargeDiameter(DN1);
             DN3 = dn3 ?? GetFeederDiameter();
@@ -178,28 +245,28 @@ namespace LiftingStationRevitFeeder.Domain
             //DimY = dimY ?? Civil Requirement > MinLSWallDistanceY
             DimZ = dimZ ?? GetPumpDimensionZ();
             DimW = dimW ?? DimN + DimO + DimP + DimQ + DimU + DimV + DimR;
-            MeasurementRange = new String($"0 - {(Flow.GetValue("m3 h-1") * 1.1):F0} CMH");
+            MeasurementRange = new String($"0 - {(PumpSelector.Flow.GetValue("m3 h-1") * 1.1):F0} CMH");
         }
 
 
         private Length GetSuctionDiameter() =>
-            new Length(new Length(Math.Max(0.065, Math.Sqrt((4 * Flow.GetValue("m3 s-1")
-                / PumpInletVelocity.GetValue("m s-1") / Math.PI)))).CopyConvertTo("mm")).GetStandardDiameter();
+            new Length(new Length(Math.Max(0.065, Math.Sqrt((4 * PumpSelector.Flow.GetValue("m3 s-1")
+                / PumpSelector.PumpInletVelocity.GetValue("m s-1") / Math.PI)))).CopyConvertTo("mm")).GetStandardDiameter();
 
         private static Length? GetDischargeDiameter(Length suctionDiameter) => suctionDiameter < new Length(150, "mm")
                 ? suctionDiameter.GetLastSmallerDiameter()
                 : new Length(Math.Min(suctionDiameter.GetValue("mm"), 400), "mm");
         private Length GetFeederDiameter() =>
-            new Length(new Length(Math.Max(DN2.CopyConvertTo("m").Value, Math.Sqrt((4 * Flow.GetValue("m3 s-1")
-                / PressurizedPipeVelocity.GetValue("m s-1") / Math.PI)))).CopyConvertTo("mm")).GetStandardDiameter();
+            new Length(new Length(Math.Max(DN2.CopyConvertTo("m").Value, Math.Sqrt((4 * PumpSelector.Flow.GetValue("m3 s-1")
+                / PumpSelector.PressurizedPipeVelocity.GetValue("m s-1") / Math.PI)))).CopyConvertTo("mm")).GetStandardDiameter();
         private Length GetRisingMainDiameter() =>
-            new Length(new Length(Math.Max(DN3.CopyConvertTo("m").Value, Math.Sqrt((4 * DesignPeakHourFlow.GetValue("m3 s-1")
-                / PressurizedPipeVelocity.GetValue("m s-1") / Math.PI)))).CopyConvertTo("mm")).GetStandardDiameter();
+            new Length(new Length(Math.Max(DN3.CopyConvertTo("m").Value, Math.Sqrt((4 * PumpSelector.DesignPeakHourFlow.GetValue("m3 s-1")
+                / PumpSelector.PressurizedPipeVelocity.GetValue("m s-1") / Math.PI)))).CopyConvertTo("mm")).GetStandardDiameter();
         private Length GetFlowmeterDiameter() =>
            new Length(DN4).GetLastSmallerDiameter();
         private Length GetGravityMainDiameter() =>
-            new Length(new Length(Math.Min(0.6, Math.Max(0.05, Math.Sqrt((4 * DesignPeakHourFlow.GetValue("m3 s-1")
-                / GravityPipeVelocity.GetValue("m s-1") / Math.PI))))).CopyConvertTo("mm")).GetStandardDiameter();
+            new Length(new Length(Math.Min(0.6, Math.Max(0.05, Math.Sqrt((4 * PumpSelector.DesignPeakHourFlow.GetValue("m3 s-1")
+                / PumpSelector.GravityPipeVelocity.GetValue("m s-1") / Math.PI))))).CopyConvertTo("mm")).GetStandardDiameter();
         private Length GetPumpDimensionA() => DN1.Value == 150 ? new Length(200, "mm")
             : new Length(Math.Min(400, Math.Max(100, DN1.Value)), "mm");
         // private Length GetPumpDimensionB() =>
@@ -235,11 +302,14 @@ namespace LiftingStationRevitFeeder.Domain
                                             : DN3.Value < 125 ? new Length(Math.Ceiling(DN3.Value / 6) * 10 + DimS.Value + 300, "mm")
                                             : new Length(Math.Ceiling(DN3.Value / 7) * 10 + DimS.Value + 300, "mm");
         private Length GetMinimumLSWallDistanceX() =>
-            new Length(2 * DimK.Value + NumberOfPumps * DimH.Value + (NumberOfPumps - 1) * DimL.Value, "mm");
+            new Length(2 * DimK.Value + PumpSelector.NumberOfPumps * DimH.Value + (PumpSelector.NumberOfPumps - 1) * DimL.Value, "mm");
         private Length GetMinimumLSWallDistanceY() =>
             new Length((Math.Round((DimM.Value + DimE.Value + DimF.Value + DimG.Value + DimH.Value / 2) / 10) * 10) + 800, "mm");
         private Length GetPumpDimensionZ() =>
-            new Length(DimK.Value + (NumberOfPumps - 1) * (DimH.Value + DimL.Value) + (DN4.Value + 50) * 11, "mm");
+            new Length(DimK.Value + (PumpSelector.NumberOfPumps - 1) * (DimH.Value + DimL.Value) + (DN4.Value + 50) * 11, "mm");
     }
+       
+         
+        }
     
-}
+    
