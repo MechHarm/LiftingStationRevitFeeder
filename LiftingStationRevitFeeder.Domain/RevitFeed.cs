@@ -8,6 +8,7 @@ namespace LiftingStationRevitFeeder.Domain
     {
         public PumpSelector PumpSelector { get; private set; }
         public Pipes Pipes { get; private set; }
+        public PumpGeometry PumpGeometry { get; set; }
         
         public Length? Freeboard { get; private set; }
         public Length? LevA { get; private set; }
@@ -20,16 +21,7 @@ namespace LiftingStationRevitFeeder.Domain
         public Length? LevH { get; private set; }
         public Length? LevI { get; private set; }
         public Length WetWellDepth { get; private set; }
-        public Length? DimA { get; private set; }
-        public Length? DimB { get; private set; }
-        public Length? DimC { get; private set; }
-        public Length? DimD { get; private set; }
-        public Length? DimE { get; private set; }
-        public Length? DimF { get; private set; }
-        public Length? DimG { get; private set; }
-        public Length? DimH { get; private set; }
-        public Length? DimI { get; private set; }
-        public Length? DimJ { get; private set; }
+    
         public Length? DimK { get; private set; }
         public Length? DimL { get; private set; }
         public Length? DimM { get; private set; }
@@ -60,6 +52,7 @@ namespace LiftingStationRevitFeeder.Domain
         {
             PumpSelector = PumpSelector.Create(designPeakHourFlow, head);
             Pipes = Pipes.Create(PumpSelector);
+            PumpGeometry = PumpGeometry.Create(Pipes);
             Freeboard = new Length(500, "mm");
             LevA = new Length(1000, "mm");
             LevB = new Length(500, "mm");
@@ -71,16 +64,7 @@ namespace LiftingStationRevitFeeder.Domain
             LevH = new Length(500, "mm");
             LevI = new Length(500, "mm");
             WetWellDepth = LevA + LevB + LevC + LevD + LevE + LevF + LevG + LevH + LevI;
-            DimA = GetPumpDimensionA();
-            DimB = GetPumpDimensionB();
-            DimC = GetPumpDimensionC();
-            DimD = GetPumpDimensionD();
-            DimF = GetPumpDimensionF();
-            DimG = DimF + Pipes.DN2;
-            DimH = GetPumpDimensionH();
-            DimI = GetPumpDimensionI();
-            DimE = DimI * 1.6;
-            DimJ = GetPumpDimensionJ();
+            
             DimK = new Length(800, "mm");
             DimL = new Length(800, "mm");
             DimM = Pipes.DN3 * 1.5;
@@ -161,6 +145,7 @@ namespace LiftingStationRevitFeeder.Domain
 
             PumpSelector = PumpSelector.Create(designPeakHourFlow, head, dutyPumpsCount, standbyPumpsCount, pumpInletVelocity, gravityPipeVelocity, pressurizedPipeVelocity);
             Pipes = Pipes.Create(PumpSelector, dn1, dn2, dn3, dn4, dn5, dnBreath, dnInlet, dnBackflow );
+            PumpGeometry = PumpGeometry.Create(Pipes, dimA, dimB, dimC, dimD, dimE, dimF, dimG, dimH, dimI, dimJ);
 
             Freeboard = freeboard ?? new Length(500, "mm");
             LevA = levA ?? new Length(1000, "mm");
@@ -173,16 +158,7 @@ namespace LiftingStationRevitFeeder.Domain
             LevH = levH ?? new Length(500, "mm");
             LevI = levI ?? new Length(500, "mm");
             WetWellDepth = LevA + LevB + LevC + LevD + LevE + LevF + LevG + LevH + LevI;
-            DimA = dimA ?? GetPumpDimensionA();
-            DimB = dimB ?? GetPumpDimensionB();
-            DimC = dimC ?? GetPumpDimensionC();
-            DimD = dimD ?? GetPumpDimensionD();
-            DimF = dimF ?? GetPumpDimensionF();
-            DimG = dimG ?? DimF + Pipes.DN2;
-            DimH = dimH ?? GetPumpDimensionH();
-            DimI = dimI ?? GetPumpDimensionI();
-            DimE = dimE ?? DimI * 1.6;
-            DimJ = dimJ ?? GetPumpDimensionJ();
+            
             DimK = dimK ?? new Length(800, "mm");
             DimL = dimL ?? new Length(800, "mm");
             DimM = dimM ?? Pipes.DN3 * 1.5;
@@ -205,29 +181,7 @@ namespace LiftingStationRevitFeeder.Domain
         }
 
 
-        private Length GetPumpDimensionA() => Pipes.DN1.Value == 150 ? new Length(200, "mm")
-            : new Length(Math.Min(400, Math.Max(100, Pipes.DN1.Value)), "mm");
-        // private Length GetPumpDimensionB() =>
-        //    new Length(Math.Min(2400, 8 * DN1.Value), "mm");
-        private Length GetPumpDimensionB() => Math.Floor(Pipes.DN1.Value / 100) == 2 ? new Length(Pipes.DN1.Value * 8 - 300, "mm")
-                                            : Pipes.DN1.Value < 200 ? new Length(Pipes.DN1.Value * 8, "mm")
-                                            : new Length(2400, "mm");
-        private Length GetPumpDimensionC() =>
-            new Length(Pipes.DN2.Value / 2 + DimA.Value + 50, "mm");
-        private Length GetPumpDimensionD() =>
-            new Length(DimC.Value + Math.Round(Pipes.DN2.Value * 0.35) * 5, "mm");
-        private Length GetPumpDimensionF() =>
-            new Length(Math.Round(((Pipes.DN2.Value + 90)/2)/5) * 5, "mm");
-        private Length GetPumpDimensionH() => Pipes.DN1.Value < 100 ? new Length(Pipes.DN1.Value * 5, "mm")
-                                            : Pipes.DN1.Value < 175 ? new Length(Pipes.DN1.Value * 4, "mm")
-                                            : Pipes.DN1.Value < 250 ? new Length(Math.Round(Pipes.DN1.Value * 3.5), "mm")
-                                            : new Length(Pipes.DN1.Value * 3, "mm");
-        private Length GetPumpDimensionI() => Pipes.DN1.Value < 125 ? new Length(Math.Round(DimH.Value / 2 + 12.5), "mm")
-                                            : Pipes.DN1.Value < 175 ? new Length(Math.Round(DimH.Value / 2 + 25), "mm")
-                                            : Pipes.DN1.Value < 250 ? new Length(Math.Round(DimH.Value / 2 + 57.5), "mm")
-                                            : new Length(Math.Round(DimH.Value / 2 + 75), "mm");
-        private Length GetPumpDimensionJ() => Pipes.DN1.Value < 250 ? new Length(85, "mm")
-                                            : new Length(150, "mm");
+      
         private Length GetPumpDimensionO() => Pipes.DN3.Value < 80 ? new Length(500 + Math.Ceiling(Pipes.DN3.Value / 4) * 10, "mm")
                                             : Pipes.DN3.Value < 125 ? new Length(500 + Math.Ceiling(Pipes.DN3.Value / 6) * 10, "mm")
                                             : new Length(500 + Math.Ceiling(Pipes.DN3.Value / 7) * 10, "mm");
@@ -240,11 +194,11 @@ namespace LiftingStationRevitFeeder.Domain
                                             : Pipes.DN3.Value < 125 ? new Length(Math.Ceiling(Pipes.DN3.Value / 6) * 10 + DimS.Value + 300, "mm")
                                             : new Length(Math.Ceiling(Pipes.DN3.Value / 7) * 10 + DimS.Value + 300, "mm");
         private Length GetMinimumLSWallDistanceX() =>
-            new Length(2 * DimK.Value + PumpSelector.NumberOfPumps * DimH.Value + (PumpSelector.NumberOfPumps - 1) * DimL.Value, "mm");
+            new Length(2 * DimK.Value + PumpSelector.NumberOfPumps * PumpGeometry.DimH.Value + (PumpSelector.NumberOfPumps - 1) * DimL.Value, "mm");
         private Length GetMinimumLSWallDistanceY() =>
-            new Length((Math.Round((DimM.Value + DimE.Value + DimF.Value + DimG.Value + DimH.Value / 2) / 10) * 10) + 800, "mm");
+            new Length((Math.Round((DimM.Value + PumpGeometry.DimE.Value + PumpGeometry.DimF.Value + PumpGeometry.DimG.Value + PumpGeometry.DimH.Value / 2) / 10) * 10) + 800, "mm");
         private Length GetPumpDimensionZ() =>
-            new Length(DimK.Value + (PumpSelector.NumberOfPumps - 1) * (DimH.Value + DimL.Value) + (Pipes.DN4.Value + 50) * 11, "mm");
+            new Length(DimK.Value + (PumpSelector.NumberOfPumps - 1) * (PumpGeometry.DimH.Value + DimL.Value) + (Pipes.DN4.Value + 50) * 11, "mm");
     }
        
          
