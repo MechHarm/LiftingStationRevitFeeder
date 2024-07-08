@@ -39,22 +39,22 @@ namespace LiftingStationRevitFeeder.Domain.Test
             sut.PumpGeometry.DimH.GetValue().Should().Be(750);
             sut.PumpGeometry.DimI.GetValue().Should().Be(450);
             sut.PumpGeometry.DimJ.GetValue().Should().Be(150);
-            sut.DimK.GetValue().Should().Be(800);
-            sut.DimL.GetValue().Should().Be(800);
-            sut.DimM.GetValue().Should().Be(375);
-            sut.DimN.GetValue().Should().Be(1000);
-            sut.DimO.GetValue().Should().Be(860);
-            sut.DimP.GetValue().Should().Be(1220);
-            sut.DimQ.GetValue().Should().Be(860);
-            sut.DimR.GetValue().Should().Be(935);
-            sut.DimS.GetValue().Should().Be(375);
-            sut.DimT.GetValue().Should().Be(1035);
-            sut.DimU.GetValue().Should().Be(400);
-            sut.DimV.GetValue().Should().Be(400);
-            sut.DimZ.GetValue().Should().Be(5650);
-            sut.DimW.GetValue().Should().Be(5675);
-            sut.MinLSWallDistanceX.GetValue().Should().Be(3900);
-            sut.MinLSWallDistanceY.GetValue().Should().Be(2860);
+            sut.PumpSumpArrangement.DimK.GetValue().Should().Be(800);
+            sut.PumpSumpArrangement.DimL.GetValue().Should().Be(800);
+            sut.PumpSumpArrangement.DimM.GetValue().Should().Be(375);
+            sut.PumpSumpArrangement.DimN.GetValue().Should().Be(1000);
+            sut.PumpSumpArrangement.DimO.GetValue().Should().Be(860);
+            sut.PumpSumpArrangement.DimP.GetValue().Should().Be(1220);
+            sut.PumpSumpArrangement.DimQ.GetValue().Should().Be(860);
+            sut.PumpSumpArrangement.DimR.GetValue().Should().Be(935);
+            sut.Levels.DimS.GetValue().Should().Be(375);
+            sut.Levels.DimT.GetValue().Should().Be(1035);
+            sut.PumpSumpArrangement.DimU.GetValue().Should().Be(400);
+            sut.ValvePitGeometry.DimV.GetValue().Should().Be(400);
+            sut.ValvePitGeometry.DimZ.GetValue().Should().Be(5650);
+            sut.ValvePitGeometry.DimW.GetValue().Should().Be(5675);
+            sut.PumpSumpArrangement.MinLSWallDistanceX.GetValue().Should().Be(3900);
+            sut.PumpSumpArrangement.MinLSWallDistanceY.GetValue().Should().Be(2860);
         }
         [Test]
         public void LiftingStationRevitFeederTest_WhenBaseparametersWithoutOptionals_ExpectedValuesAreSet()
@@ -89,22 +89,22 @@ namespace LiftingStationRevitFeeder.Domain.Test
             sut.PumpGeometry.DimH.GetValue().Should().Be(600);
             sut.PumpGeometry.DimI.GetValue().Should().Be(325);
             sut.PumpGeometry.DimJ.GetValue().Should().Be(85);
-            sut.DimK.GetValue().Should().Be(800);
-            sut.DimL.GetValue().Should().Be(800);
-            sut.DimM.GetValue().Should().Be(225);
-            sut.DimN.GetValue().Should().Be(1000);
-            sut.DimO.GetValue().Should().Be(720);
-            sut.DimP.GetValue().Should().Be(940);
-            sut.DimQ.GetValue().Should().Be(720);
-            sut.DimR.GetValue().Should().Be(885);
-            sut.DimS.GetValue().Should().Be(225);
-            sut.DimT.GetValue().Should().Be(745);
-            sut.DimU.GetValue().Should().Be(400);
-            sut.DimV.GetValue().Should().Be(400);
-            sut.DimZ.GetValue().Should().Be(4400);
-            sut.DimW.GetValue().Should().Be(5065);
-            sut.MinLSWallDistanceX.GetValue().Should().Be(3600);
-            sut.MinLSWallDistanceY.GetValue().Should().Be(2240);
+            sut.PumpSumpArrangement.DimK.GetValue().Should().Be(800);
+            sut.PumpSumpArrangement.DimL.GetValue().Should().Be(800);
+            sut.PumpSumpArrangement.DimM.GetValue().Should().Be(225);
+            sut.PumpSumpArrangement.DimN.GetValue().Should().Be(1000);
+            sut.PumpSumpArrangement.DimO.GetValue().Should().Be(720);
+            sut.PumpSumpArrangement.DimP.GetValue().Should().Be(940);
+            sut.PumpSumpArrangement.DimQ.GetValue().Should().Be(720);
+            sut.PumpSumpArrangement.DimR.GetValue().Should().Be(885);
+            sut.Levels.DimS.GetValue().Should().Be(225);
+            sut.Levels.DimT.GetValue().Should().Be(745);
+            sut.PumpSumpArrangement.DimU.GetValue().Should().Be(400);
+            sut.ValvePitGeometry.DimV.GetValue().Should().Be(400);
+            sut.ValvePitGeometry.DimZ.GetValue().Should().Be(4400);
+            sut.ValvePitGeometry.DimW.GetValue().Should().Be(5065);
+            sut.PumpSumpArrangement.MinLSWallDistanceX.GetValue().Should().Be(3600);
+            sut.PumpSumpArrangement.MinLSWallDistanceY.GetValue().Should().Be(2240);
         }
     }
 }
