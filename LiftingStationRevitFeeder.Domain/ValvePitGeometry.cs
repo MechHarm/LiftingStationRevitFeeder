@@ -1,9 +1,4 @@
 ﻿using MeasurementUnits.NET;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace LiftingStationRevitFeeder.Domain
 {
@@ -13,16 +8,16 @@ namespace LiftingStationRevitFeeder.Domain
         public Length? DimW { get; private set; }
         public Length? DimV { get; private set; }
 
-        protected ValvePitGeometry(PumpSelector pumpSelector, Pipes pipes,PumpGeometry pumpGeometry,  PumpSumpArrangement pumpSumpArrangement, Length? dimV = default, Length? dimZ = default, Length? dimW = default)
+        protected ValvePitGeometry(PumpSelector pumpSelector, Pipes pipes, PumpGeometry pumpGeometry, PumpSumpArrangement pumpSumpArrangement, Length? dimV = default, Length? dimZ = default, Length? dimW = default)
         {
             DimV = dimV ?? new Length(400, "mm");
-            DimZ = dimZ ?? GetPumpDimensionZ(pumpSelector, pipes,pumpGeometry,pumpSumpArrangement);
+            DimZ = dimZ ?? GetPumpDimensionZ(pumpSelector, pipes, pumpGeometry, pumpSumpArrangement);
             DimW = dimW ?? pumpSumpArrangement.DimN + pumpSumpArrangement.DimO + pumpSumpArrangement.DimP + pumpSumpArrangement.DimQ + pumpSumpArrangement.DimU + DimV + pumpSumpArrangement.DimR;
 
         }
         public static ValvePitGeometry Create(PumpSelector pumpSelector, Pipes pipes, PumpGeometry pumpGeometry, PumpSumpArrangement pumpSumpArrangement, Length? dimV = default, Length? dimZ = default, Length? dimW = default)
         {
-            return new ValvePitGeometry(pumpSelector, pipes,pumpGeometry,pumpSumpArrangement,dimV,dimZ);
+            return new ValvePitGeometry(pumpSelector, pipes, pumpGeometry, pumpSumpArrangement, dimV, dimZ);
         }
         private Length GetPumpDimensionZ(PumpSelector pumpSelector, Pipes pipes, PumpGeometry pumpGeometry, PumpSumpArrangement pumpSumpArrangement) =>
           new Length(pumpSumpArrangement.DimK.Value + (pumpSelector.NumberOfPumps - 1) * (pumpGeometry.DimH.Value + pumpSumpArrangement.DimL.Value) + (pipes.DN4.Value + 50) * 11, "mm");

@@ -1,9 +1,4 @@
 ﻿using MeasurementUnits.NET;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace LiftingStationRevitFeeder.Domain
 {
@@ -47,7 +42,7 @@ namespace LiftingStationRevitFeeder.Domain
             DimQ = dimQ ?? DimO;
             DimR = dimR ?? GetPumpDimensionR(pipes);
             DimU = dimU ?? new Length(400, "mm");
-            MinLSWallDistanceX = GetMinimumLSWallDistanceX(pumpSelector,pumpGeometry);
+            MinLSWallDistanceX = GetMinimumLSWallDistanceX(pumpSelector, pumpGeometry);
             MinLSWallDistanceY = GetMinimumLSWallDistanceY(pumpGeometry);
         }
         public static PumpSumpArrangement Create(

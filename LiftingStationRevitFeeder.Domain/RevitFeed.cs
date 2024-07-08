@@ -1,6 +1,4 @@
-﻿using HydraulicLogic.Contract.DistributionChannelSizes.GetDistributionChannelSizes;
-using MeasurementUnits.NET;
-using System.Net;
+﻿using MeasurementUnits.NET;
 
 namespace LiftingStationRevitFeeder.Domain
 {
@@ -29,12 +27,12 @@ namespace LiftingStationRevitFeeder.Domain
             Pipes = Pipes.Create(PumpSelector);
             PumpGeometry = PumpGeometry.Create(Pipes);
             Levels = Levels.Create(Pipes);
-            PumpSumpArrangement = PumpSumpArrangement.Create(PumpSelector,Pipes,PumpGeometry);
+            PumpSumpArrangement = PumpSumpArrangement.Create(PumpSelector, Pipes, PumpGeometry);
             PumpSumpGeometry = PumpSumpGeometry.Create();
-            ValvePitGeometry = ValvePitGeometry.Create(PumpSelector, Pipes,PumpGeometry,PumpSumpArrangement);
+            ValvePitGeometry = ValvePitGeometry.Create(PumpSelector, Pipes, PumpGeometry, PumpSumpArrangement);
             //DimX = dimX ?? Civil Requirement > MinLSWallDistanceX
             //DimY = dimY ?? Civil Requirement > MinLSWallDistanceY
-            
+
             MeasurementRange = new String($"0 - {(PumpSelector.Flow.GetValue("m3 h-1") * 1.1):F0} CMH");
         }
         public RevitFeed(
@@ -96,24 +94,21 @@ namespace LiftingStationRevitFeeder.Domain
         {
 
             PumpSelector = PumpSelector.Create(designPeakHourFlow, head, dutyPumpsCount, standbyPumpsCount, pumpInletVelocity, gravityPipeVelocity, pressurizedPipeVelocity);
-            Pipes = Pipes.Create(PumpSelector, dn1, dn2, dn3, dn4, dn5, dnBreath, dnInlet, dnBackflow );
+            Pipes = Pipes.Create(PumpSelector, dn1, dn2, dn3, dn4, dn5, dnBreath, dnInlet, dnBackflow);
             PumpGeometry = PumpGeometry.Create(Pipes, dimA, dimB, dimC, dimD, dimE, dimF, dimG, dimH, dimI, dimJ);
             Levels = Levels.Create(Pipes, dimS, dimT);
-            PumpSumpArrangement = PumpSumpArrangement.Create(PumpSelector,Pipes,PumpGeometry,dimK,dimL,dimM,dimN,dimO,dimP,dimQ,dimR);
+            PumpSumpArrangement = PumpSumpArrangement.Create(PumpSelector, Pipes, PumpGeometry, dimK, dimL, dimM, dimN, dimO, dimP, dimQ, dimR);
             PumpSumpGeometry = PumpSumpGeometry.Create();
-            ValvePitGeometry = ValvePitGeometry.Create(PumpSelector,Pipes,PumpGeometry, PumpSumpArrangement, dimV, dimZ, dimW);
-          
+            ValvePitGeometry = ValvePitGeometry.Create(PumpSelector, Pipes, PumpGeometry, PumpSumpArrangement, dimV, dimZ, dimW);
+
             //DimX = dimX ?? Civil Requirement > MinLSWallDistanceX
             //DimY = dimY ?? Civil Requirement > MinLSWallDistanceY
-            
+
             MeasurementRange = new String($"0 - {(PumpSelector.Flow.GetValue("m3 h-1") * 1.1):F0} CMH");
         }
 
+    }
 
-      
-        }
-       
-         
-        }
-    
-    
+}
+
+
