@@ -9,7 +9,7 @@ namespace LiftingStationRevitFeeder.Domain
         public PumpGeometry PumpGeometry { get; private set; }
         public Levels Levels { get; private set; }
         public PumpSumpArrangement PumpSumpArrangement { get; private set; }
-        PumpSumpGeometry PumpSumpGeometry { get; set; }
+        public PumpSumpGeometry PumpSumpGeometry { get; private set; }
 
         public ValvePitGeometry ValvePitGeometry { get; private set; }
 

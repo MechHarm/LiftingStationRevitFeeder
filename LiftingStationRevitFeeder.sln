@@ -7,7 +7,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LiftingStationRevitFeeder.D
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LiftingStationRevitFeeder.Domain.Test", "LiftingStationRevitFeeder.Domain.Test\LiftingStationRevitFeeder.Domain.Test.csproj", "{252A59B4-5DE2-49D5-B561-A62426DCFF76}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RevitFeederUI", "RevitFeederUI\RevitFeederUI.csproj", "{FABF0B3D-C01E-42D4-A553-6BDC5A568AD0}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WinFormsApp1", "WinFormsApp1\WinFormsApp1.csproj", "{672747B0-1C0D-410A-AD35-C5EA380F8F30}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -23,10 +23,10 @@ Global
 		{252A59B4-5DE2-49D5-B561-A62426DCFF76}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{252A59B4-5DE2-49D5-B561-A62426DCFF76}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{252A59B4-5DE2-49D5-B561-A62426DCFF76}.Release|Any CPU.Build.0 = Release|Any CPU
-		{FABF0B3D-C01E-42D4-A553-6BDC5A568AD0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{FABF0B3D-C01E-42D4-A553-6BDC5A568AD0}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{FABF0B3D-C01E-42D4-A553-6BDC5A568AD0}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{FABF0B3D-C01E-42D4-A553-6BDC5A568AD0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{672747B0-1C0D-410A-AD35-C5EA380F8F30}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{672747B0-1C0D-410A-AD35-C5EA380F8F30}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{672747B0-1C0D-410A-AD35-C5EA380F8F30}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{672747B0-1C0D-410A-AD35-C5EA380F8F30}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

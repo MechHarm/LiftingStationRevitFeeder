@@ -1,8 +1,10 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Drawing;
+using System.IO;
 using System.Linq;
 using System.Net;
 using System.Reflection.Emit;
@@ -10,6 +12,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using static System.Windows.Forms.VisualStyles.VisualStyleElement;
+//using LiftingStationRevitFeeder.Domain;
 
 namespace RevitFeederUI
 {
@@ -973,7 +976,7 @@ namespace RevitFeederUI
         {
             int dn3Value = 0;
             int dn4Value;
-            
+
             if (int.TryParse(comboBox5.Text, out dn4Value) && int.TryParse(comboBox4.Text, out dn3Value))
             {
                 int lowerBound = dn3Value;
@@ -1282,6 +1285,33 @@ namespace RevitFeederUI
             { this.textBox38.Enabled = true; }
             { this.label75.Enabled = true; }
             { this.label76.Enabled = true; }
+        }
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+            var designPeakHourFlow = new VolumetricFlow(Convert.ToDouble(textBox47.Text));
+            var head = new Length(Convert.ToDouble(textBox27.Text));
+            var dutyPumpsCount = Convert.ToInt32(textBox49.Text);
+            var standbyPumpsCount = Convert.ToInt32(textBox48.Text);
+            var numberOfPumps = dutyPumpsCount + standbyPumpsCount;
+            var revitFeed = new RevitFeederDTO(designPeakHourFlow, head, dutyPumpsCount, standbyPumpsCount, numberOfPumps);
+            WriteToJsonFile<RevitFeederDTO>("C:\\RevitTest\\Kutya.json", revitFeed);
+
+        }
+        public static void WriteToJsonFile<T>(string filePath, T objectToWrite, bool append = false) where T : new()
+        {
+            TextWriter writer = null;
+            try
+            {
+                var contentsToWriteToFile = JsonConvert.SerializeObject(objectToWrite);
+                writer = new StreamWriter(filePath, append);
+                writer.Write(contentsToWriteToFile);
+            }
+            finally
+            {
+                if (writer != null)
+                    writer.Close();
+            }
         }
     }
 }
