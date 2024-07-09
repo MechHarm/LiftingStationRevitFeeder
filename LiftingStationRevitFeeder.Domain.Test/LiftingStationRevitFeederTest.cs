@@ -10,54 +10,51 @@ namespace LiftingStationRevitFeeder.Domain.Test
         public void LiftingStationRevitFeederTest_WhenBaseparameters_ExpectedValuesAreSet()
         {
             // arrange
-            var designPeakHourFlow = new VolumetricFlow(500, "m3 h-1");
+            var designPeakHourFlow = new VolumetricFlow(250, "m3 h-1");
             var head = new Length(5, "m");
-            var pumpInletVelocity = new Velocity(2, "m s-1");
-            var dutyPumpsCount = 2;
-            var standbyPumpsCount = 2;
 
             // act
-            var sut = new RevitFeed(designPeakHourFlow, head, pumpInletVelocity,null, null, dutyPumpsCount, standbyPumpsCount, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null);
+            var sut = RevitFeed.CreateBase(designPeakHourFlow, head);
 
             // assert
             sut.Should().NotBeNull();
-            sut.Flow.GetValue().Should().BeApproximately(250, 0.1);
-            sut.NumberOfPumps.Should().Be(4);
-            sut.PumpInletVelocity.GetValue().Should().BeApproximately(2, 0.001);
-            sut.DN1.GetValue().Should().Be(250);
-            sut.DN2.GetValue().Should().Be(250);
-            sut.DN3.GetValue().Should().Be(250);
-            sut.DN4.GetValue().Should().Be(300);
-            sut.DN5.GetValue().Should().Be(250);
-            sut.DNBreath.GetValue().Should().Be(250);
-            sut.DNInlet.GetValue().Should().Be(550);
-            sut.DNBackflow.GetValue().Should().Be(250);
-            sut.DimA.GetValue().Should().Be(250);
-            sut.DimB.GetValue().Should().Be(1700);
-            sut.DimC.GetValue().Should().Be(425);
-            sut.DimD.GetValue().Should().Be(865);
-            sut.DimE.GetValue().Should().Be(720);
-            sut.DimF.GetValue().Should().Be(170);
-            sut.DimG.GetValue().Should().Be(420);
-            sut.DimH.GetValue().Should().Be(750);
-            sut.DimI.GetValue().Should().Be(450);
-            sut.DimJ.GetValue().Should().Be(150);
-            sut.DimK.GetValue().Should().Be(800);
-            sut.DimL.GetValue().Should().Be(800);
-            sut.DimM.GetValue().Should().Be(375);
-            sut.DimN.GetValue().Should().Be(1000);
-            sut.DimO.GetValue().Should().Be(860);
-            sut.DimP.GetValue().Should().Be(1220);
-            sut.DimQ.GetValue().Should().Be(860);
-            sut.DimR.GetValue().Should().Be(960);
-            sut.DimS.GetValue().Should().Be(450);
-            sut.DimT.GetValue().Should().Be(1110);
-            sut.DimU.GetValue().Should().Be(400);
-            sut.DimV.GetValue().Should().Be(400);
-            sut.DimZ.GetValue().Should().Be(9300);
-            sut.DimW.GetValue().Should().Be(5700);
-            sut.MinLSWallDistanceX.GetValue().Should().Be(7000);
-            sut.MinLSWallDistanceY.GetValue().Should().Be(2860);
+            sut.PumpSelector.Flow.GetValue().Should().BeApproximately(250, 0.1);
+            sut.PumpSelector.NumberOfPumps.Should().Be(2);
+            sut.PumpSelector.PumpInletVelocity.GetValue().Should().BeApproximately(1.7, 0.001);
+            sut.Pipes.DN1.GetValue().Should().Be(250);
+            sut.Pipes.DN2.GetValue().Should().Be(250);
+            sut.Pipes.DN3.GetValue().Should().Be(250);
+            sut.Pipes.DN4.GetValue().Should().Be(250);
+            sut.Pipes.DN5.GetValue().Should().Be(200);
+            sut.Pipes.DNBreath.GetValue().Should().Be(250);
+            sut.Pipes.DNInlet.GetValue().Should().Be(400);
+            sut.Pipes.DNBackflow.GetValue().Should().Be(250);
+            sut.PumpGeometry.DimA.GetValue().Should().Be(250);
+            sut.PumpGeometry.DimB.GetValue().Should().Be(1700);
+            sut.PumpGeometry.DimC.GetValue().Should().Be(425);
+            sut.PumpGeometry.DimD.GetValue().Should().Be(865);
+            sut.PumpGeometry.DimE.GetValue().Should().Be(720);
+            sut.PumpGeometry.DimF.GetValue().Should().Be(170);
+            sut.PumpGeometry.DimG.GetValue().Should().Be(420);
+            sut.PumpGeometry.DimH.GetValue().Should().Be(750);
+            sut.PumpGeometry.DimI.GetValue().Should().Be(450);
+            sut.PumpGeometry.DimJ.GetValue().Should().Be(150);
+            sut.PumpSumpArrangement.DimK.GetValue().Should().Be(800);
+            sut.PumpSumpArrangement.DimL.GetValue().Should().Be(800);
+            sut.PumpSumpArrangement.DimM.GetValue().Should().Be(375);
+            sut.PumpSumpArrangement.DimN.GetValue().Should().Be(1000);
+            sut.PumpSumpArrangement.DimO.GetValue().Should().Be(860);
+            sut.PumpSumpArrangement.DimP.GetValue().Should().Be(1220);
+            sut.PumpSumpArrangement.DimQ.GetValue().Should().Be(860);
+            sut.PumpSumpArrangement.DimR.GetValue().Should().Be(935);
+            sut.Levels.DimS.GetValue().Should().Be(375);
+            sut.Levels.DimT.GetValue().Should().Be(1035);
+            sut.PumpSumpArrangement.DimU.GetValue().Should().Be(400);
+            sut.ValvePitGeometry.DimV.GetValue().Should().Be(400);
+            sut.ValvePitGeometry.DimZ.GetValue().Should().Be(5650);
+            sut.ValvePitGeometry.DimW.GetValue().Should().Be(5675);
+            sut.PumpSumpArrangement.MinLSWallDistanceX.GetValue().Should().Be(3900);
+            sut.PumpSumpArrangement.MinLSWallDistanceY.GetValue().Should().Be(2860);
         }
         [Test]
         public void LiftingStationRevitFeederTest_WhenBaseparametersWithoutOptionals_ExpectedValuesAreSet()
@@ -71,43 +68,43 @@ namespace LiftingStationRevitFeeder.Domain.Test
 
             // assert
             sut.Should().NotBeNull();
-            sut.Flow.GetValue().Should().BeApproximately(100, 0.1);
-            sut.NumberOfPumps.Should().Be(2);
-            sut.PumpInletVelocity.GetValue().Should().BeApproximately(1.7, 0.001);
-            sut.DN1.GetValue().Should().Be(150);
-            sut.DN2.GetValue().Should().Be(150);
-            sut.DN3.GetValue().Should().Be(150);
-            sut.DN4.GetValue().Should().Be(150);
-            sut.DN5.GetValue().Should().Be(125);
-            sut.DNBreath.GetValue().Should().Be(150);
-            sut.DNInlet.GetValue().Should().Be(250);
-            sut.DNBackflow.GetValue().Should().Be(150);
-            sut.DimA.GetValue().Should().Be(200);
-            sut.DimB.GetValue().Should().Be(1200);
-            sut.DimC.GetValue().Should().Be(325);
-            sut.DimD.GetValue().Should().Be(585);
-            sut.DimE.GetValue().Should().Be(520);
-            sut.DimF.GetValue().Should().Be(120);
-            sut.DimG.GetValue().Should().Be(270);
-            sut.DimH.GetValue().Should().Be(600);
-            sut.DimI.GetValue().Should().Be(325);
-            sut.DimJ.GetValue().Should().Be(85);
-            sut.DimK.GetValue().Should().Be(800);
-            sut.DimL.GetValue().Should().Be(800);
-            sut.DimM.GetValue().Should().Be(225);
-            sut.DimN.GetValue().Should().Be(1000);
-            sut.DimO.GetValue().Should().Be(720);
-            sut.DimP.GetValue().Should().Be(440);
-            sut.DimQ.GetValue().Should().Be(720);
-            sut.DimR.GetValue().Should().Be(885);
-            sut.DimS.GetValue().Should().Be(225);
-            sut.DimT.GetValue().Should().Be(745);
-            sut.DimU.GetValue().Should().Be(400);
-            sut.DimV.GetValue().Should().Be(400);
-            sut.DimZ.GetValue().Should().Be(4400);
-            sut.DimW.GetValue().Should().Be(4565);
-            sut.MinLSWallDistanceX.GetValue().Should().Be(3600);
-            sut.MinLSWallDistanceY.GetValue().Should().Be(2240);
+            sut.PumpSelector.Flow.GetValue().Should().BeApproximately(100, 0.1);
+            sut.PumpSelector.NumberOfPumps.Should().Be(2);
+            sut.PumpSelector.PumpInletVelocity.GetValue().Should().BeApproximately(1.7, 0.001);
+            sut.Pipes.DN1.GetValue().Should().Be(150);
+            sut.Pipes.DN2.GetValue().Should().Be(150);
+            sut.Pipes.DN3.GetValue().Should().Be(150);
+            sut.Pipes.DN4.GetValue().Should().Be(150);
+            sut.Pipes.DN5.GetValue().Should().Be(125);
+            sut.Pipes.DNBreath.GetValue().Should().Be(150);
+            sut.Pipes.DNInlet.GetValue().Should().Be(250);
+            sut.Pipes.DNBackflow.GetValue().Should().Be(150);
+            sut.PumpGeometry.DimA.GetValue().Should().Be(200);
+            sut.PumpGeometry.DimB.GetValue().Should().Be(1200);
+            sut.PumpGeometry.DimC.GetValue().Should().Be(325);
+            sut.PumpGeometry.DimD.GetValue().Should().Be(585);
+            sut.PumpGeometry.DimE.GetValue().Should().Be(520);
+            sut.PumpGeometry.DimF.GetValue().Should().Be(120);
+            sut.PumpGeometry.DimG.GetValue().Should().Be(270);
+            sut.PumpGeometry.DimH.GetValue().Should().Be(600);
+            sut.PumpGeometry.DimI.GetValue().Should().Be(325);
+            sut.PumpGeometry.DimJ.GetValue().Should().Be(85);
+            sut.PumpSumpArrangement.DimK.GetValue().Should().Be(800);
+            sut.PumpSumpArrangement.DimL.GetValue().Should().Be(800);
+            sut.PumpSumpArrangement.DimM.GetValue().Should().Be(225);
+            sut.PumpSumpArrangement.DimN.GetValue().Should().Be(1000);
+            sut.PumpSumpArrangement.DimO.GetValue().Should().Be(720);
+            sut.PumpSumpArrangement.DimP.GetValue().Should().Be(940);
+            sut.PumpSumpArrangement.DimQ.GetValue().Should().Be(720);
+            sut.PumpSumpArrangement.DimR.GetValue().Should().Be(885);
+            sut.Levels.DimS.GetValue().Should().Be(225);
+            sut.Levels.DimT.GetValue().Should().Be(745);
+            sut.PumpSumpArrangement.DimU.GetValue().Should().Be(400);
+            sut.ValvePitGeometry.DimV.GetValue().Should().Be(400);
+            sut.ValvePitGeometry.DimZ.GetValue().Should().Be(4400);
+            sut.ValvePitGeometry.DimW.GetValue().Should().Be(5065);
+            sut.PumpSumpArrangement.MinLSWallDistanceX.GetValue().Should().Be(3600);
+            sut.PumpSumpArrangement.MinLSWallDistanceY.GetValue().Should().Be(2240);
         }
     }
 }
