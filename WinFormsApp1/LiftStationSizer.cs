@@ -1,8 +1,10 @@
-﻿using Newtonsoft.Json;
+﻿using FluentAssertions;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
+using System.Diagnostics;
 using System.Drawing;
 using System.IO;
 using System.Linq;
@@ -32,27 +34,27 @@ namespace RevitFeederUI
 
             string[] items = { "Select", "40", "50", "65", "80", "100", "125", "150", "200", "250", "300", "350", "400", "450", "500", "550", "600" };
 
-            AddItemsToComboBoxes(items, comboBox1, comboBox2,
-                             comboBox3, comboBox4, comboBox5,
-                             comboBox6, comboBox7, comboBox8);
+            AddItemsToComboBoxes(items, dn1, dn2,
+                             dnInlet, dn3, dn4,
+                             dn5, dnBreath, dnBackflow);
 
-            comboBox1.SelectedIndex = 0;
-            comboBox2.SelectedIndex = 0;
-            comboBox3.SelectedIndex = 0;
-            comboBox4.SelectedIndex = 0;
-            comboBox5.SelectedIndex = 0;
-            comboBox6.SelectedIndex = 0;
-            comboBox7.SelectedIndex = 0;
-            comboBox8.SelectedIndex = 0;
+            dn1.SelectedIndex = 0;
+            dn2.SelectedIndex = 0;
+            dnInlet.SelectedIndex = 0;
+            dn3.SelectedIndex = 0;
+            dn4.SelectedIndex = 0;
+            dn5.SelectedIndex = 0;
+            dnBreath.SelectedIndex = 0;
+            dnBackflow.SelectedIndex = 0;
 
-            comboBox1.SelectedIndexChanged += comboBox1_SelectedIndexChanged;
-            comboBox2.SelectedIndexChanged += comboBox2_SelectedIndexChanged;
-            comboBox3.SelectedIndexChanged += comboBox3_SelectedIndexChanged;
-            comboBox4.SelectedIndexChanged += comboBox4_SelectedIndexChanged;
-            comboBox5.SelectedIndexChanged += comboBox5_SelectedIndexChanged;
-            comboBox6.SelectedIndexChanged += comboBox6_SelectedIndexChanged;
-            comboBox7.SelectedIndexChanged += comboBox7_SelectedIndexChanged;
-            comboBox8.SelectedIndexChanged += comboBox8_SelectedIndexChanged;
+            dn1.SelectedIndexChanged += comboBox1_SelectedIndexChanged;
+            dn2.SelectedIndexChanged += comboBox2_SelectedIndexChanged;
+            dnInlet.SelectedIndexChanged += comboBox3_SelectedIndexChanged;
+            dn3.SelectedIndexChanged += comboBox4_SelectedIndexChanged;
+            dn4.SelectedIndexChanged += comboBox5_SelectedIndexChanged;
+            dn5.SelectedIndexChanged += comboBox6_SelectedIndexChanged;
+            dnBreath.SelectedIndexChanged += comboBox7_SelectedIndexChanged;
+            dnBackflow.SelectedIndexChanged += comboBox8_SelectedIndexChanged;
 
         }
         private void label2_Click(object sender, EventArgs e)
@@ -64,17 +66,17 @@ namespace RevitFeederUI
         {
             int lowerBound = 65;
             int upperBound = 500;
-            if (int.TryParse(comboBox1.Text, out int dn1Value))
+            if (int.TryParse(dn1.Text, out int dn1Value))
             {
                 if (dn1Value < lowerBound)
                 {
-                    comboBox1.Text = lowerBound.ToString();
+                    dn1.Text = lowerBound.ToString();
                     MessageBox.Show($"Value has to fall between {lowerBound} mm and {upperBound} mm." +
                         $"\nValue modified to lower limit!");
                 }
                 else if (dn1Value > upperBound)
                 {
-                    comboBox1.Text = upperBound.ToString();
+                    dn1.Text = upperBound.ToString();
                     MessageBox.Show($"Value has to fall between {lowerBound} mm and {upperBound} mm." +
                         $"\nValue modified to upper limit!");
                 }
@@ -82,13 +84,13 @@ namespace RevitFeederUI
             }
             else
             {
-                comboBox1.Text = lowerBound.ToString();
+                dn1.Text = lowerBound.ToString();
                 MessageBox.Show($"Feed me with integer between between {lowerBound} mm and {upperBound} mm." +
                         $"\nValue modified to lower limit!");
             }
             label23.ForeColor = Color.RoyalBlue;
             label24.ForeColor = Color.RoyalBlue;
-            { this.comboBox2.Enabled = true; }
+            { this.dn2.Enabled = true; }
             { this.label21.Enabled = true; }
             { this.label22.Enabled = true; }
         }
@@ -157,17 +159,17 @@ namespace RevitFeederUI
         {
             int lowerBound = 16;
             int upperBound = 1000;
-            if (int.TryParse(textBox47.Text, out int flowValue))
+            if (int.TryParse(flow.Text, out int flowValue))
             {
                 if (flowValue < lowerBound)
                 {
-                    textBox47.Text = lowerBound.ToString();
+                    flow.Text = lowerBound.ToString();
                     MessageBox.Show($"Value has to fall between {lowerBound} m³/h and {upperBound} m³/h." +
                         $"\nValue modified to lower limit!");
                 }
                 else if (flowValue > upperBound)
                 {
-                    textBox47.Text = upperBound.ToString();
+                    flow.Text = upperBound.ToString();
                     MessageBox.Show($"Value has to fall between {lowerBound} m³/h and {upperBound} m³/h." +
                         $"\nValue modified to upper limit!");
                 }
@@ -175,13 +177,13 @@ namespace RevitFeederUI
             }
             else
             {
-                textBox47.Text = lowerBound.ToString();
+                flow.Text = lowerBound.ToString();
                 MessageBox.Show($"Feed me with integer between between {lowerBound} m³/h and {upperBound} m³/h." +
                         $"\nValue modified to lower limit!");
             }
             label105.ForeColor = Color.RoyalBlue;
             label106.ForeColor = Color.RoyalBlue;
-            { this.textBox27.Enabled = true; }
+            { this.head.Enabled = true; }
             { this.label103.Enabled = true; }
             { this.label104.Enabled = true; }
         }
@@ -199,16 +201,46 @@ namespace RevitFeederUI
                 if (ctrl is System.Windows.Forms.TextBox textBox)
                 {
                     textBox.Text = string.Empty;
+                    textBox.Enabled = false;
+                }
+                else if (ctrl is System.Windows.Forms.ComboBox comboBox)
+                {
+                    comboBox.SelectedIndex = 0;
+                    comboBox.Enabled = false;
+                }
+                else if (ctrl is System.Windows.Forms.Label label)
+                {
+                    label.Enabled = false;
+                    label.ForeColor = Color.Black;
                 }
             }
-            comboBox1.SelectedIndex = 0;
-            comboBox2.SelectedIndex = 0;
-            comboBox3.SelectedIndex = 0;
-            comboBox4.SelectedIndex = 0;
-            comboBox5.SelectedIndex = 0;
-            comboBox6.SelectedIndex = 0;
-            comboBox7.SelectedIndex = 0;
-            comboBox8.SelectedIndex = 0;
+            { this.label105.Enabled = true; }
+            { this.label106.Enabled = true; }
+            { this.label50.Enabled = true; }
+            { this.label51.Enabled = true; }
+            { this.label50.ForeColor = Color.RoyalBlue; }
+            { this.label51.ForeColor = Color.RoyalBlue; }
+            { this.label102.Enabled = true; }
+            { this.label99.Enabled = true; }
+            { this.label102.ForeColor = Color.RoyalBlue; }
+            { this.label99.ForeColor = Color.RoyalBlue; }
+            { this.label53.Enabled = true; }
+            { this.label49.Enabled = true; }
+            { this.label53.ForeColor = Color.RoyalBlue; }
+            { this.label49.ForeColor = Color.RoyalBlue; }
+            { this.label94.Enabled = true; }
+            { this.label95.Enabled = true; }
+            { this.label94.ForeColor = Color.RoyalBlue; }
+            { this.label95.ForeColor = Color.RoyalBlue; }
+            { this.flow.Enabled = true; }
+            //dn1.SelectedIndex = 0;
+            //dn2.SelectedIndex = 0;
+            //dnInlet.SelectedIndex = 0;
+            //dn3.SelectedIndex = 0;
+            //dn4.SelectedIndex = 0;
+            //dn5.SelectedIndex = 0;
+            //dnBreath.SelectedIndex = 0;
+            //dnBackflow.SelectedIndex = 0;
         }
         // Enable DimB
         //private void CheckAndEnableTextBox11()
@@ -222,7 +254,7 @@ namespace RevitFeederUI
         // DN1 selector
         private void comboBox1_SelectedIndexChanged(object sender, EventArgs e)
         {
-            string selectedItem = comboBox1.SelectedItem.ToString();
+            string selectedItem = dn1.SelectedItem.ToString();
             //if (selectedItem != "Select")
             //{ this.comboBox2.Enabled = true; }
             //else
@@ -231,37 +263,37 @@ namespace RevitFeederUI
         // DN2 selector
         private void comboBox2_SelectedIndexChanged(object sender, EventArgs e)
         {
-            string selectedItem = comboBox2.SelectedItem.ToString();
+            string selectedItem = dn2.SelectedItem.ToString();
         }
         // DNInlet selector
         private void comboBox3_SelectedIndexChanged(object sender, EventArgs e)
         {
-            string selectedItem = comboBox3.SelectedItem.ToString();
+            string selectedItem = dnInlet.SelectedItem.ToString();
         }
         // DN3 selector
         private void comboBox4_SelectedIndexChanged(object sender, EventArgs e)
         {
-            string selectedItem = comboBox4.SelectedItem.ToString();
+            string selectedItem = dn3.SelectedItem.ToString();
         }
         // DN4 selector
         private void comboBox5_SelectedIndexChanged(object sender, EventArgs e)
         {
-            string selectedItem = comboBox5.SelectedItem.ToString();
+            string selectedItem = dn4.SelectedItem.ToString();
         }
         // DN5 selector
         private void comboBox6_SelectedIndexChanged(object sender, EventArgs e)
         {
-            string selectedItem = comboBox6.SelectedItem.ToString();
+            string selectedItem = dn5.SelectedItem.ToString();
         }
         // DNBreath selector
         private void comboBox7_SelectedIndexChanged(object sender, EventArgs e)
         {
-            string selectedItem = comboBox7.SelectedItem.ToString();
+            string selectedItem = dnBreath.SelectedItem.ToString();
         }
         // DNBackflow selector
         private void comboBox8_SelectedIndexChanged(object sender, EventArgs e)
         {
-            string selectedItem = comboBox8.SelectedItem.ToString();
+            string selectedItem = dnBackflow.SelectedItem.ToString();
         }
 
         // DimA validator
@@ -269,19 +301,19 @@ namespace RevitFeederUI
         {
             int lowerBound = 75;
             int upperBound = 500;
-            if (int.TryParse(textBox1.Text, out int dimAValue))
+            if (int.TryParse(dimA.Text, out int dimAValue))
             {
 
 
                 if (dimAValue < lowerBound)
                 {
-                    textBox1.Text = lowerBound.ToString();
+                    dimA.Text = lowerBound.ToString();
                     MessageBox.Show($"Value has to fall between {lowerBound} mm and {upperBound} mm." +
                         $"\nValue modified to lower limit!");
                 }
                 else if (dimAValue > upperBound)
                 {
-                    textBox1.Text = upperBound.ToString();
+                    dimA.Text = upperBound.ToString();
                     MessageBox.Show($"Value has to fall between {lowerBound} mm and {upperBound} mm." +
                         $"\nValue modified to upper limit!");
                 }
@@ -289,13 +321,13 @@ namespace RevitFeederUI
             }
             else
             {
-                textBox1.Text = lowerBound.ToString();
+                dimA.Text = lowerBound.ToString();
                 MessageBox.Show($"Feed me with integer between between {lowerBound} mm and {upperBound} mm." +
                         $"\nValue modified to lower limit!");
             }
             label1.ForeColor = Color.RoyalBlue;
             label2.ForeColor = Color.RoyalBlue;
-            { this.textBox3.Enabled = true; }
+            { this.dimC.Enabled = true; }
             { this.label5.Enabled = true; }
             { this.label6.Enabled = true; }
         }
@@ -306,21 +338,21 @@ namespace RevitFeederUI
             int dimAValue = 0;
             int dimBValue;
             int dimCValue = 0;
-            if (int.TryParse(comboBox1.Text, out dn1Value) && int.TryParse(textBox11.Text, out dimAValue)
-                && int.TryParse(textBox11.Text, out dimBValue) && int.TryParse(textBox11.Text, out dimCValue))
+            if (int.TryParse(dn1.Text, out dn1Value) && int.TryParse(dimA.Text, out dimAValue)
+                && int.TryParse(dimB.Text, out dimBValue) && int.TryParse(dimC.Text, out dimCValue))
             {
                 int lowerBound = Convert.ToInt32(1.5 * dn1Value + dimCValue - dimAValue + 400);
                 int upperBound = 3000;
 
                 if (dimBValue < lowerBound)
                 {
-                    textBox11.Text = lowerBound.ToString();
+                    dimB.Text = lowerBound.ToString();
                     MessageBox.Show($"Value has to fall between {lowerBound} mm and {upperBound} mm." +
                         $"\nValue modified to lower limit!");
                 }
                 else if (dimBValue > upperBound)
                 {
-                    textBox11.Text = upperBound.ToString();
+                    dimB.Text = upperBound.ToString();
                     MessageBox.Show($"Value has to fall between {lowerBound} mm and {upperBound} mm." +
                         $"\nValue modified to upper limit!");
                 }
@@ -330,13 +362,13 @@ namespace RevitFeederUI
             {
                 int lowerBound = Convert.ToInt32(1.5 * dn1Value + dimCValue - dimAValue + 400);
                 int upperBound = 3000;
-                textBox11.Text = lowerBound.ToString();
+                dimB.Text = lowerBound.ToString();
                 MessageBox.Show($"Feed me with integer between between {lowerBound} mm and {upperBound} mm." +
                         $"\nValue modified to lower limit!");
             }
             label3.ForeColor = Color.RoyalBlue;
             label4.ForeColor = Color.RoyalBlue;
-            { this.textBox4.Enabled = true; }
+            { this.dimD.Enabled = true; }
             { this.label7.Enabled = true; }
             { this.label8.Enabled = true; }
         }
@@ -358,21 +390,21 @@ namespace RevitFeederUI
             int dn2Value;
             int dimAValue = 0;
 
-            if (int.TryParse(comboBox2.Text, out dn2Value) && int.TryParse(textBox1.Text, out dimAValue)
-            && int.TryParse(textBox3.Text, out int dimCValue))
+            if (int.TryParse(dn2.Text, out dn2Value) && int.TryParse(dimA.Text, out dimAValue)
+            && int.TryParse(dimC.Text, out int dimCValue))
             {
                 int lowerBound = Convert.ToInt32(dn2Value / 2 + dimAValue + 35);
                 int upperBound = Convert.ToInt32(dn2Value / 2 + dimAValue + 85);
 
                 if (dimCValue < lowerBound)
                 {
-                    textBox3.Text = lowerBound.ToString();
+                    dimC.Text = lowerBound.ToString();
                     MessageBox.Show($"Value has to fall between {lowerBound} mm and {upperBound} mm." +
                         $"\nValue modified to lower limit!");
                 }
                 else if (dimCValue > upperBound)
                 {
-                    textBox3.Text = upperBound.ToString();
+                    dimC.Text = upperBound.ToString();
                     MessageBox.Show($"Value has to fall between {lowerBound} mm and {upperBound} mm." +
                         $"\nValue modified to upper limit!");
                 }
@@ -383,13 +415,13 @@ namespace RevitFeederUI
             {
                 int lowerBound = Convert.ToInt32(dn2Value / 2 + dimAValue + 35);
                 int upperBound = Convert.ToInt32(dn2Value / 2 + dimAValue + 85);
-                textBox3.Text = lowerBound.ToString();
+                dimC.Text = lowerBound.ToString();
                 MessageBox.Show($"Feed me with integer between between {lowerBound} mm and {upperBound} mm." +
                         $"\nValue modified to lower limit!");
             }
             label5.ForeColor = Color.RoyalBlue;
             label6.ForeColor = Color.RoyalBlue;
-            { this.textBox11.Enabled = true; }
+            { this.dimB.Enabled = true; }
             { this.label3.Enabled = true; }
             { this.label4.Enabled = true; }
         }
@@ -398,23 +430,24 @@ namespace RevitFeederUI
         {
             int dn1Value;
             int dn2Value;
-            string selectedValue = comboBox1.SelectedItem.ToString();
-            int selectedIndex = comboBox1.SelectedIndex;
-            string smallestItemAvailable = comboBox1.Items[selectedIndex - 2].ToString();
-            if (int.TryParse(comboBox2.Text, out dn2Value) && int.TryParse(comboBox1.Text, out dn1Value))
+
+            if (int.TryParse(dn2.Text, out dn2Value) && int.TryParse(dn1.Text, out dn1Value))
             {
+                string selectedValue = dn1.SelectedItem.ToString();
+                int selectedIndex = dn1.SelectedIndex;
+                string smallestItemAvailable = dn1.Items[selectedIndex - 2].ToString();
                 int lowerBound = Math.Max(50, Convert.ToInt32(smallestItemAvailable));
                 int upperBound = Math.Min(400, Convert.ToInt32(dn1Value));
 
                 if (dn2Value < lowerBound)
                 {
-                    comboBox2.Text = lowerBound.ToString();
+                    dn2.Text = lowerBound.ToString();
                     MessageBox.Show($"Value has to fall between {lowerBound} mm and {upperBound} mm." +
                         $"\nValue modified to lower limit!");
                 }
                 else if (dn2Value > upperBound)
                 {
-                    comboBox2.Text = upperBound.ToString();
+                    dn2.Text = upperBound.ToString();
                     MessageBox.Show($"Value has to fall between {lowerBound} mm and {upperBound} mm." +
                         $"\nValue modified to upper limit!");
                 }
@@ -422,15 +455,18 @@ namespace RevitFeederUI
             }
             else
             {
+                string selectedValue = dn1.SelectedItem.ToString();
+                int selectedIndex = dn1.SelectedIndex;
+                string smallestItemAvailable = dn1.Items[selectedIndex - 2].ToString();
                 int lowerBound = Math.Max(50, Convert.ToInt32(smallestItemAvailable));
                 int upperBound = 400;
-                comboBox2.Text = lowerBound.ToString();
+                dn2.Text = lowerBound.ToString();
                 MessageBox.Show($"Feed me with integer between between {lowerBound} m and {upperBound} m." +
                         $"\nValue modified to lower limit!");
             }
             label22.ForeColor = Color.RoyalBlue;
             label21.ForeColor = Color.RoyalBlue;
-            { this.textBox1.Enabled = true; }
+            { this.dimA.Enabled = true; }
             { this.label1.Enabled = true; }
             { this.label2.Enabled = true; }
         }
@@ -439,17 +475,17 @@ namespace RevitFeederUI
         {
             int lowerBound = 3;
             int upperBound = 60;
-            if (int.TryParse(textBox27.Text, out int headValue))
+            if (int.TryParse(head.Text, out int headValue))
             {
                 if (headValue < lowerBound)
                 {
-                    textBox27.Text = lowerBound.ToString();
+                    head.Text = lowerBound.ToString();
                     MessageBox.Show($"Value has to fall between {lowerBound} m and {upperBound} m." +
                         $"\nValue modified to lower limit!");
                 }
                 else if (headValue > upperBound)
                 {
-                    textBox27.Text = upperBound.ToString();
+                    head.Text = upperBound.ToString();
                     MessageBox.Show($"Value has to fall between {lowerBound} m and {upperBound} m." +
                         $"\nValue modified to upper limit!");
                 }
@@ -457,13 +493,13 @@ namespace RevitFeederUI
             }
             else
             {
-                textBox27.Text = lowerBound.ToString();
+                head.Text = lowerBound.ToString();
                 MessageBox.Show($"Feed me with integer between between {lowerBound} m and {upperBound} m." +
                         $"\nValue modified to lower limit!");
             }
             label103.ForeColor = Color.RoyalBlue;
             label104.ForeColor = Color.RoyalBlue;
-            { this.textBox49.Enabled = true; }
+            { this.duty.Enabled = true; }
             { this.label108.Enabled = true; }
             { this.label110.Enabled = true; }
         }
@@ -472,17 +508,17 @@ namespace RevitFeederUI
         {
             int lowerBound = 1;
             int upperBound = 6;
-            if (int.TryParse(textBox49.Text, out int headValue))
+            if (int.TryParse(duty.Text, out int dutyPumps))
             {
-                if (headValue < lowerBound)
+                if (dutyPumps < lowerBound)
                 {
-                    textBox49.Text = lowerBound.ToString();
+                    duty.Text = lowerBound.ToString();
                     MessageBox.Show($"Value has to fall between {lowerBound} pcs and {upperBound} pcs." +
                         $"\nValue modified to lower limit!");
                 }
-                else if (headValue > upperBound)
+                else if (dutyPumps > upperBound)
                 {
-                    textBox49.Text = upperBound.ToString();
+                    duty.Text = upperBound.ToString();
                     MessageBox.Show($"Value has to fall between {lowerBound} pcs and {upperBound} pcs." +
                         $"\nValue modified to upper limit!");
                 }
@@ -490,13 +526,13 @@ namespace RevitFeederUI
             }
             else
             {
-                textBox49.Text = lowerBound.ToString();
+                duty.Text = lowerBound.ToString();
                 MessageBox.Show($"Feed me with integer between between {lowerBound} pcs and {upperBound} pcs." +
                         $"\nValue modified to lower limit!");
             }
             //label108.ForeColor = Color.RoyalBlue;
             label110.ForeColor = Color.RoyalBlue;
-            { this.textBox48.Enabled = true; }
+            { this.standby.Enabled = true; }
             //{ this.label108.Enabled = true; }
             { this.label107.Enabled = true; }
         }
@@ -505,17 +541,17 @@ namespace RevitFeederUI
         {
             int lowerBound = 1;
             int upperBound = 4;
-            if (int.TryParse(textBox48.Text, out int headValue))
+            if (int.TryParse(standby.Text, out int standbyPumps))
             {
-                if (headValue < lowerBound)
+                if (standbyPumps < lowerBound)
                 {
-                    textBox48.Text = lowerBound.ToString();
+                    standby.Text = lowerBound.ToString();
                     MessageBox.Show($"Value has to fall between {lowerBound} pcs and {upperBound} pcs." +
                         $"\nValue modified to lower limit!");
                 }
-                else if (headValue > upperBound)
+                else if (standbyPumps > upperBound)
                 {
-                    textBox48.Text = upperBound.ToString();
+                    standby.Text = upperBound.ToString();
                     MessageBox.Show($"Value has to fall between {lowerBound} pcs and {upperBound} pcs." +
                         $"\nValue modified to upper limit!");
                 }
@@ -523,62 +559,62 @@ namespace RevitFeederUI
             }
             else
             {
-                textBox48.Text = lowerBound.ToString();
+                standby.Text = lowerBound.ToString();
                 MessageBox.Show($"Feed me with integer between between {lowerBound} pcs and {upperBound} pcs." +
                         $"\nValue modified to lower limit!");
             }
             label107.ForeColor = Color.RoyalBlue;
             label108.ForeColor = Color.RoyalBlue;
-            { this.comboBox3.Enabled = true; }
+            { this.dnInlet.Enabled = true; }
             { this.label54.Enabled = true; }
             { this.label93.Enabled = true; }
         }
         // DNInlet validator 
         private void label93_Click(object sender, EventArgs e)
         {
-            string selectedItem = comboBox3.SelectedItem.ToString();
+            string selectedItem = dnInlet.SelectedItem.ToString();
             if (selectedItem != "Select")
             {
-                this.comboBox7.Enabled = true;
+                this.dnBreath.Enabled = true;
                 label54.ForeColor = Color.RoyalBlue;
                 label93.ForeColor = Color.RoyalBlue;
                 { this.label25.Enabled = true; }
                 { this.label26.Enabled = true; }
             }
             else
-            { this.comboBox7.Enabled = false; }
+            { this.dnBreath.Enabled = false; }
 
         }
         // DnBreath validator
         private void label26_Click(object sender, EventArgs e)
         {
-            string selectedItem = comboBox7.SelectedItem.ToString();
+            string selectedItem = dnBreath.SelectedItem.ToString();
             if (selectedItem != "Select")
             {
-                this.comboBox8.Enabled = true;
+                this.dnBackflow.Enabled = true;
                 label25.ForeColor = Color.RoyalBlue;
                 label26.ForeColor = Color.RoyalBlue;
                 { this.label47.Enabled = true; }
                 { this.label48.Enabled = true; }
             }
             else
-            { this.comboBox8.Enabled = false; }
+            { this.dnBackflow.Enabled = false; }
 
         }
         // DNBackflow validator
         private void label48_Click(object sender, EventArgs e)
         {
-            string selectedItem = comboBox8.SelectedItem.ToString();
+            string selectedItem = dnBackflow.SelectedItem.ToString();
             if (selectedItem != "Select")
             {
-                this.comboBox1.Enabled = true;
+                this.dn1.Enabled = true;
                 label47.ForeColor = Color.RoyalBlue;
                 label48.ForeColor = Color.RoyalBlue;
                 { this.label23.Enabled = true; }
                 { this.label24.Enabled = true; }
             }
             else
-            { this.comboBox1.Enabled = false; }
+            { this.dn1.Enabled = false; }
 
         }
         // DimD validator
@@ -587,21 +623,21 @@ namespace RevitFeederUI
             int dn2Value;
             int dimCValue = 0;
 
-            if (int.TryParse(comboBox2.Text, out dn2Value) && int.TryParse(textBox3.Text, out dimCValue)
-            && int.TryParse(textBox4.Text, out int dimDValue))
+            if (int.TryParse(dn2.Text, out dn2Value) && int.TryParse(dimC.Text, out dimCValue)
+            && int.TryParse(dimD.Text, out int dimDValue))
             {
                 int lowerBound = dn2Value + dimCValue + 75;
                 int upperBound = dn2Value + dimCValue + 200;
 
                 if (dimDValue < lowerBound)
                 {
-                    textBox4.Text = lowerBound.ToString();
+                    dimD.Text = lowerBound.ToString();
                     MessageBox.Show($"Value has to fall between {lowerBound} mm and {upperBound} mm." +
                         $"\nValue modified to lower limit!");
                 }
                 else if (dimDValue > upperBound)
                 {
-                    textBox4.Text = upperBound.ToString();
+                    dimD.Text = upperBound.ToString();
                     MessageBox.Show($"Value has to fall between {lowerBound} mm and {upperBound} mm." +
                         $"\nValue modified to upper limit!");
                 }
@@ -612,13 +648,13 @@ namespace RevitFeederUI
             {
                 int lowerBound = dn2Value + dimCValue + 75;
                 int upperBound = dn2Value + dimCValue + 200;
-                textBox4.Text = lowerBound.ToString();
+                dimD.Text = lowerBound.ToString();
                 MessageBox.Show($"Feed me with integer between between {lowerBound} mm and {upperBound} mm." +
                         $"\nValue modified to lower limit!");
             }
             label7.ForeColor = Color.RoyalBlue;
             label8.ForeColor = Color.RoyalBlue;
-            { this.textBox8.Enabled = true; }
+            { this.dimH.Enabled = true; }
             { this.label15.Enabled = true; }
             { this.label16.Enabled = true; }
         }
@@ -629,7 +665,7 @@ namespace RevitFeederUI
             int lowerBound = 0;
             int upperBound = 0;
 
-            if (int.TryParse(comboBox1.Text, out dn1Value) && int.TryParse(textBox8.Text, out int dimHValue))
+            if (int.TryParse(dn1.Text, out dn1Value) && int.TryParse(dimH.Text, out int dimHValue))
             {
                 if (dn1Value < 100)
                 {
@@ -667,13 +703,13 @@ namespace RevitFeederUI
 
                 if (dimHValue < lowerBound)
                 {
-                    textBox8.Text = lowerBound.ToString();
+                    dimH.Text = lowerBound.ToString();
                     MessageBox.Show($"Value has to fall between {lowerBound} mm and {upperBound} mm." +
                         $"\nValue modified to lower limit!");
                 }
                 else if (dimHValue > upperBound)
                 {
-                    textBox8.Text = upperBound.ToString();
+                    dimH.Text = upperBound.ToString();
                     MessageBox.Show($"Value has to fall between {lowerBound} mm and {upperBound} mm." +
                         $"\nValue modified to upper limit!");
                 }
@@ -716,13 +752,13 @@ namespace RevitFeederUI
                     upperBound = Convert.ToInt32(dn1Value * 4);
                 }
 
-                textBox8.Text = lowerBound.ToString();
+                dimH.Text = lowerBound.ToString();
                 MessageBox.Show($"Feed me with integer between between {lowerBound} mm and {upperBound} mm." +
                         $"\nValue modified to lower limit!");
             }
             label15.ForeColor = Color.RoyalBlue;
             label16.ForeColor = Color.RoyalBlue;
-            { this.textBox9.Enabled = true; }
+            { this.dimI.Enabled = true; }
             { this.label17.Enabled = true; }
             { this.label18.Enabled = true; }
         }
@@ -731,21 +767,21 @@ namespace RevitFeederUI
         {
             int dimHValue = 0;
 
-            if (int.TryParse(textBox8.Text, out dimHValue)
-            && int.TryParse(textBox9.Text, out int dimIValue))
+            if (int.TryParse(dimH.Text, out dimHValue)
+            && int.TryParse(dimI.Text, out int dimIValue))
             {
                 int lowerBound = Convert.ToInt32(dimHValue * 0.5);
                 int upperBound = Convert.ToInt32(dimHValue * 0.75);
 
                 if (dimIValue < lowerBound)
                 {
-                    textBox9.Text = lowerBound.ToString();
+                    dimI.Text = lowerBound.ToString();
                     MessageBox.Show($"Value has to fall between {lowerBound} mm and {upperBound} mm." +
                         $"\nValue modified to lower limit!");
                 }
                 else if (dimIValue > upperBound)
                 {
-                    textBox9.Text = upperBound.ToString();
+                    dimI.Text = upperBound.ToString();
                     MessageBox.Show($"Value has to fall between {lowerBound} mm and {upperBound} mm." +
                         $"\nValue modified to upper limit!");
                 }
@@ -756,13 +792,13 @@ namespace RevitFeederUI
             {
                 int lowerBound = Convert.ToInt32(dimHValue * 0.5);
                 int upperBound = Convert.ToInt32(dimHValue * 0.75);
-                textBox9.Text = lowerBound.ToString();
+                dimI.Text = lowerBound.ToString();
                 MessageBox.Show($"Feed me with integer between between {lowerBound} mm and {upperBound} mm." +
                         $"\nValue modified to lower limit!");
             }
             label17.ForeColor = Color.RoyalBlue;
             label18.ForeColor = Color.RoyalBlue;
-            { this.textBox5.Enabled = true; }
+            { this.dimE.Enabled = true; }
             { this.label9.Enabled = true; }
             { this.label10.Enabled = true; }
         }
@@ -776,21 +812,21 @@ namespace RevitFeederUI
         {
             int dimIValue = 0;
 
-            if (int.TryParse(textBox9.Text, out dimIValue)
-            && int.TryParse(textBox5.Text, out int dimEValue))
+            if (int.TryParse(dimI.Text, out dimIValue)
+            && int.TryParse(dimE.Text, out int dimEValue))
             {
                 int lowerBound = Convert.ToInt32(dimIValue * 1.25);
                 int upperBound = Convert.ToInt32(dimIValue * 2);
 
-                if (dimIValue < lowerBound)
+                if (dimEValue < lowerBound)
                 {
-                    textBox5.Text = lowerBound.ToString();
+                    dimE.Text = lowerBound.ToString();
                     MessageBox.Show($"Value has to fall between {lowerBound} mm and {upperBound} mm." +
                         $"\nValue modified to lower limit!");
                 }
-                else if (dimIValue > upperBound)
+                else if (dimEValue > upperBound)
                 {
-                    textBox5.Text = upperBound.ToString();
+                    dimE.Text = upperBound.ToString();
                     MessageBox.Show($"Value has to fall between {lowerBound} mm and {upperBound} mm." +
                         $"\nValue modified to upper limit!");
                 }
@@ -801,13 +837,13 @@ namespace RevitFeederUI
             {
                 int lowerBound = Convert.ToInt32(dimIValue * 1.25);
                 int upperBound = Convert.ToInt32(dimIValue * 2);
-                textBox5.Text = lowerBound.ToString();
+                dimE.Text = lowerBound.ToString();
                 MessageBox.Show($"Feed me with integer between between {lowerBound} mm and {upperBound} mm." +
                         $"\nValue modified to lower limit!");
             }
             label9.ForeColor = Color.RoyalBlue;
             label10.ForeColor = Color.RoyalBlue;
-            { this.textBox6.Enabled = true; }
+            { this.dimF.Enabled = true; }
             { this.label11.Enabled = true; }
             { this.label12.Enabled = true; }
         }
@@ -816,20 +852,20 @@ namespace RevitFeederUI
         {
             double dn2Value;
 
-            if (double.TryParse(comboBox2.Text, out dn2Value) && int.TryParse(textBox6.Text, out int dimFValue))
+            if (double.TryParse(dn2.Text, out dn2Value) && int.TryParse(dimF.Text, out int dimFValue))
             {
                 int lowerBound = Convert.ToInt32(Math.Round(((dn2Value + 90) / 2) / 5) * 5);
                 int upperBound = 400;
 
                 if (dimFValue < lowerBound)
                 {
-                    textBox6.Text = lowerBound.ToString();
+                    dimF.Text = lowerBound.ToString();
                     MessageBox.Show($"Value has to fall between {lowerBound} mm and {upperBound} mm." +
                         $"\nValue modified to lower limit!");
                 }
                 else if (dimFValue > upperBound)
                 {
-                    textBox6.Text = upperBound.ToString();
+                    dimF.Text = upperBound.ToString();
                     MessageBox.Show($"Value has to fall between {lowerBound} mm and {upperBound} mm." +
                         $"\nValue modified to upper limit!");
                 }
@@ -840,13 +876,13 @@ namespace RevitFeederUI
             {
                 int lowerBound = Convert.ToInt32(Math.Round(((dn2Value + 90) / 2) / 5) * 5);
                 int upperBound = 400;
-                textBox6.Text = lowerBound.ToString();
+                dimF.Text = lowerBound.ToString();
                 MessageBox.Show($"Feed me with integer between between {lowerBound} mm and {upperBound} mm." +
                         $"\nValue modified to lower limit!");
             }
             label11.ForeColor = Color.RoyalBlue;
             label12.ForeColor = Color.RoyalBlue;
-            { this.textBox7.Enabled = true; }
+            { this.dimG.Enabled = true; }
             { this.label13.Enabled = true; }
             { this.label14.Enabled = true; }
         }
@@ -856,21 +892,21 @@ namespace RevitFeederUI
             int dn2Value;
             double dimFValue = 0;
 
-            if (int.TryParse(comboBox2.Text, out dn2Value) && double.TryParse(textBox6.Text, out dimFValue)
-                && int.TryParse(textBox7.Text, out int dimGValue))
+            if (int.TryParse(dn2.Text, out dn2Value) && double.TryParse(dimF.Text, out dimFValue)
+                && int.TryParse(dimG.Text, out int dimGValue))
             {
                 int lowerBound = Convert.ToInt32(dimFValue / 2 + dn2Value);
                 int upperBound = Convert.ToInt32(dimFValue + dn2Value * 2);
 
-                if (dimFValue < lowerBound)
+                if (dimGValue < lowerBound)
                 {
-                    textBox7.Text = lowerBound.ToString();
+                    dimG.Text = lowerBound.ToString();
                     MessageBox.Show($"Value has to fall between {lowerBound} mm and {upperBound} mm." +
                         $"\nValue modified to lower limit!");
                 }
-                else if (dimFValue > upperBound)
+                else if (dimGValue > upperBound)
                 {
-                    textBox7.Text = upperBound.ToString();
+                    dimG.Text = upperBound.ToString();
                     MessageBox.Show($"Value has to fall between {lowerBound} mm and {upperBound} mm." +
                         $"\nValue modified to upper limit!");
                 }
@@ -880,13 +916,13 @@ namespace RevitFeederUI
             {
                 int lowerBound = Convert.ToInt32(dimFValue / 2 + dn2Value);
                 int upperBound = Convert.ToInt32(dimFValue + dn2Value * 2);
-                textBox7.Text = lowerBound.ToString();
+                dimG.Text = lowerBound.ToString();
                 MessageBox.Show($"Feed me with integer between between {lowerBound} mm and {upperBound} mm." +
                         $"\nValue modified to lower limit!");
             }
             label13.ForeColor = Color.RoyalBlue;
             label14.ForeColor = Color.RoyalBlue;
-            { this.textBox10.Enabled = true; }
+            { this.dimJ.Enabled = true; }
             { this.label19.Enabled = true; }
             { this.label20.Enabled = true; }
         }
@@ -895,19 +931,19 @@ namespace RevitFeederUI
         {
             int lowerBound = 65;
             int upperBound = 200;
-            if (int.TryParse(textBox10.Text, out int dimJValue))
+            if (int.TryParse(dimJ.Text, out int dimJValue))
             {
 
 
                 if (dimJValue < lowerBound)
                 {
-                    textBox10.Text = lowerBound.ToString();
+                    dimJ.Text = lowerBound.ToString();
                     MessageBox.Show($"Value has to fall between {lowerBound} mm and {upperBound} mm." +
                         $"\nValue modified to lower limit!");
                 }
                 else if (dimJValue > upperBound)
                 {
-                    textBox10.Text = upperBound.ToString();
+                    dimJ.Text = upperBound.ToString();
                     MessageBox.Show($"Value has to fall between {lowerBound} mm and {upperBound} mm." +
                         $"\nValue modified to upper limit!");
                 }
@@ -915,13 +951,13 @@ namespace RevitFeederUI
             }
             else
             {
-                textBox10.Text = lowerBound.ToString();
+                dimJ.Text = lowerBound.ToString();
                 MessageBox.Show($"Feed me with integer between between {lowerBound} mm and {upperBound} mm." +
                         $"\nValue modified to lower limit!");
             }
             label19.ForeColor = Color.RoyalBlue;
             label20.ForeColor = Color.RoyalBlue;
-            { this.comboBox4.Enabled = true; }
+            { this.dn3.Enabled = true; }
             { this.label69.Enabled = true; }
             { this.label70.Enabled = true; }
         }
@@ -935,23 +971,24 @@ namespace RevitFeederUI
         {
             int dn2Value = 0;
             int dn3Value;
-            string selectedValue = comboBox2.SelectedItem.ToString();
-            int selectedIndex = comboBox2.SelectedIndex;
-            string largestItemAvailable = comboBox2.Items[selectedIndex + 2].ToString();
-            if (int.TryParse(comboBox4.Text, out dn3Value) && int.TryParse(comboBox2.Text, out dn2Value))
+
+            if (int.TryParse(dn3.Text, out dn3Value) && int.TryParse(dn2.Text, out dn2Value))
             {
+                string selectedValue = dn2.SelectedItem.ToString();
+                int selectedIndex = dn2.SelectedIndex;
+                string largestItemAvailable = dn2.Items[selectedIndex + 2].ToString();
                 int lowerBound = Math.Max(50, Convert.ToInt32(dn2Value));
                 int upperBound = Math.Min(400, Convert.ToInt32(largestItemAvailable));
 
-                if (dn2Value < lowerBound)
+                if (dn3Value < lowerBound)
                 {
-                    comboBox4.Text = lowerBound.ToString();
+                    dn3.Text = lowerBound.ToString();
                     MessageBox.Show($"Value has to fall between {lowerBound} mm and {upperBound} mm." +
                         $"\nValue modified to lower limit!");
                 }
-                else if (dn2Value > upperBound)
+                else if (dn3Value > upperBound)
                 {
-                    comboBox4.Text = upperBound.ToString();
+                    dn3.Text = upperBound.ToString();
                     MessageBox.Show($"Value has to fall between {lowerBound} mm and {upperBound} mm." +
                         $"\nValue modified to upper limit!");
                 }
@@ -959,15 +996,18 @@ namespace RevitFeederUI
             }
             else
             {
+                string selectedValue = dn2.SelectedItem.ToString();
+                int selectedIndex = dn2.SelectedIndex;
+                string largestItemAvailable = dn2.Items[selectedIndex + 2].ToString();
                 int lowerBound = Math.Max(50, Convert.ToInt32(dn2Value));
                 int upperBound = Math.Min(400, Convert.ToInt32(largestItemAvailable));
-                comboBox4.Text = lowerBound.ToString();
+                dn3.Text = lowerBound.ToString();
                 MessageBox.Show($"Feed me with integer between between {lowerBound} m and {upperBound} m." +
                         $"\nValue modified to lower limit!");
             }
             label69.ForeColor = Color.RoyalBlue;
             label70.ForeColor = Color.RoyalBlue;
-            { this.comboBox5.Enabled = true; }
+            { this.dn4.Enabled = true; }
             { this.label71.Enabled = true; }
             { this.label72.Enabled = true; }
         }
@@ -977,20 +1017,20 @@ namespace RevitFeederUI
             int dn3Value = 0;
             int dn4Value;
 
-            if (int.TryParse(comboBox5.Text, out dn4Value) && int.TryParse(comboBox4.Text, out dn3Value))
+            if (int.TryParse(dn4.Text, out dn4Value) && int.TryParse(dn3.Text, out dn3Value))
             {
                 int lowerBound = dn3Value;
                 int upperBound = 500;
 
                 if (dn4Value < lowerBound)
                 {
-                    comboBox5.Text = lowerBound.ToString();
+                    dn4.Text = lowerBound.ToString();
                     MessageBox.Show($"Value has to fall between {lowerBound} mm and {upperBound} mm." +
                         $"\nValue modified to lower limit!");
                 }
                 else if (dn4Value > upperBound)
                 {
-                    comboBox5.Text = upperBound.ToString();
+                    dn4.Text = upperBound.ToString();
                     MessageBox.Show($"Value has to fall between {lowerBound} mm and {upperBound} mm." +
                         $"\nValue modified to upper limit!");
                 }
@@ -1000,13 +1040,13 @@ namespace RevitFeederUI
             {
                 int lowerBound = dn3Value;
                 int upperBound = 500;
-                comboBox5.Text = lowerBound.ToString();
+                dn4.Text = lowerBound.ToString();
                 MessageBox.Show($"Feed me with integer between between {lowerBound} m and {upperBound} m." +
                         $"\nValue modified to lower limit!");
             }
             label71.ForeColor = Color.RoyalBlue;
             label72.ForeColor = Color.RoyalBlue;
-            { this.comboBox6.Enabled = true; }
+            { this.dn5.Enabled = true; }
             { this.label87.Enabled = true; }
             { this.label88.Enabled = true; }
         }
@@ -1015,23 +1055,24 @@ namespace RevitFeederUI
         {
             int dn4Value = 0;
             int dn5Value;
-            string selectedValue = comboBox5.SelectedItem.ToString();
-            int selectedIndex = comboBox5.SelectedIndex;
-            string smallestItemAvailable = comboBox5.Items[selectedIndex - 2].ToString();
-            if (int.TryParse(comboBox6.Text, out dn5Value) && int.TryParse(comboBox5.Text, out dn4Value))
+
+            if (int.TryParse(dn5.Text, out dn5Value) && int.TryParse(dn4.Text, out dn4Value))
             {
+                string selectedValue = dn4.SelectedItem.ToString();
+                int selectedIndex = dn4.SelectedIndex;
+                string smallestItemAvailable = dn4.Items[selectedIndex - 2].ToString();
                 int lowerBound = Convert.ToInt32(smallestItemAvailable);
                 int upperBound = dn4Value;
 
                 if (dn5Value < lowerBound)
                 {
-                    comboBox6.Text = lowerBound.ToString();
+                    dn5.Text = lowerBound.ToString();
                     MessageBox.Show($"Value has to fall between {lowerBound} mm and {upperBound} mm." +
                         $"\nValue modified to lower limit!");
                 }
                 else if (dn5Value > upperBound)
                 {
-                    comboBox6.Text = upperBound.ToString();
+                    dn5.Text = upperBound.ToString();
                     MessageBox.Show($"Value has to fall between {lowerBound} mm and {upperBound} mm." +
                         $"\nValue modified to upper limit!");
                 }
@@ -1039,15 +1080,18 @@ namespace RevitFeederUI
             }
             else
             {
+                string selectedValue = dn4.SelectedItem.ToString();
+                int selectedIndex = dn4.SelectedIndex;
+                string smallestItemAvailable = dn4.Items[selectedIndex - 2].ToString();
                 int lowerBound = Convert.ToInt32(smallestItemAvailable);
                 int upperBound = dn4Value;
-                comboBox6.Text = lowerBound.ToString();
+                dn5.Text = lowerBound.ToString();
                 MessageBox.Show($"Feed me with integer between between {lowerBound} m and {upperBound} m." +
                         $"\nValue modified to lower limit!");
             }
             label87.ForeColor = Color.RoyalBlue;
             label88.ForeColor = Color.RoyalBlue;
-            { this.textBox43.Enabled = true; }
+            { this.dimK.Enabled = true; }
             { this.label85.Enabled = true; }
             { this.label86.Enabled = true; }
         }
@@ -1056,19 +1100,19 @@ namespace RevitFeederUI
         {
             int lowerBound = 500;
             int upperBound = 3000;
-            if (int.TryParse(textBox43.Text, out int dimKValue))
+            if (int.TryParse(dimK.Text, out int dimKValue))
             {
 
 
                 if (dimKValue < lowerBound)
                 {
-                    textBox43.Text = lowerBound.ToString();
+                    dimK.Text = lowerBound.ToString();
                     MessageBox.Show($"Value has to fall between {lowerBound} mm and {upperBound} mm." +
                         $"\nValue modified to lower limit!");
                 }
                 else if (dimKValue > upperBound)
                 {
-                    textBox43.Text = upperBound.ToString();
+                    dimK.Text = upperBound.ToString();
                     MessageBox.Show($"Value has to fall between {lowerBound} mm and {upperBound} mm." +
                         $"\nValue modified to upper limit!");
                 }
@@ -1076,13 +1120,13 @@ namespace RevitFeederUI
             }
             else
             {
-                textBox43.Text = lowerBound.ToString();
+                dimK.Text = lowerBound.ToString();
                 MessageBox.Show($"Feed me with integer between between {lowerBound} mm and {upperBound} mm." +
                         $"\nValue modified to lower limit!");
             }
             label85.ForeColor = Color.RoyalBlue;
             label86.ForeColor = Color.RoyalBlue;
-            { this.textBox42.Enabled = true; }
+            { this.dimL.Enabled = true; }
             { this.label83.Enabled = true; }
             { this.label84.Enabled = true; }
         }
@@ -1091,19 +1135,19 @@ namespace RevitFeederUI
         {
             int lowerBound = 500;
             int upperBound = 1500;
-            if (int.TryParse(textBox42.Text, out int dimLValue))
+            if (int.TryParse(dimL.Text, out int dimLValue))
             {
 
 
                 if (dimLValue < lowerBound)
                 {
-                    textBox42.Text = lowerBound.ToString();
+                    dimL.Text = lowerBound.ToString();
                     MessageBox.Show($"Value has to fall between {lowerBound} mm and {upperBound} mm." +
                         $"\nValue modified to lower limit!");
                 }
                 else if (dimLValue > upperBound)
                 {
-                    textBox42.Text = upperBound.ToString();
+                    dimL.Text = upperBound.ToString();
                     MessageBox.Show($"Value has to fall between {lowerBound} mm and {upperBound} mm." +
                         $"\nValue modified to upper limit!");
                 }
@@ -1111,13 +1155,13 @@ namespace RevitFeederUI
             }
             else
             {
-                textBox42.Text = lowerBound.ToString();
+                dimL.Text = lowerBound.ToString();
                 MessageBox.Show($"Feed me with integer between between {lowerBound} mm and {upperBound} mm." +
                         $"\nValue modified to lower limit!");
             }
             label83.ForeColor = Color.RoyalBlue;
             label84.ForeColor = Color.RoyalBlue;
-            { this.textBox41.Enabled = true; }
+            { this.dimM.Enabled = true; }
             { this.label81.Enabled = true; }
             { this.label82.Enabled = true; }
         }
@@ -1126,20 +1170,20 @@ namespace RevitFeederUI
         {
             double dn3Value;
 
-            if (double.TryParse(comboBox3.Text, out dn3Value) && int.TryParse(textBox41.Text, out int dimMValue))
+            if (double.TryParse(dn3.Text, out dn3Value) && int.TryParse(dimM.Text, out int dimMValue))
             {
                 int lowerBound = Convert.ToInt32(dn3Value * 1.5);
                 int upperBound = 1500;
 
                 if (dimMValue < lowerBound)
                 {
-                    textBox41.Text = lowerBound.ToString();
+                    dimM.Text = lowerBound.ToString();
                     MessageBox.Show($"Value has to fall between {lowerBound} mm and {upperBound} mm." +
                         $"\nValue modified to lower limit!");
                 }
                 else if (dimMValue > upperBound)
                 {
-                    textBox41.Text = upperBound.ToString();
+                    dimM.Text = upperBound.ToString();
                     MessageBox.Show($"Value has to fall between {lowerBound} mm and {upperBound} mm." +
                         $"\nValue modified to upper limit!");
                 }
@@ -1150,13 +1194,13 @@ namespace RevitFeederUI
             {
                 int lowerBound = Convert.ToInt32(dn3Value * 1.5);
                 int upperBound = 1500;
-                textBox41.Text = lowerBound.ToString();
+                dimM.Text = lowerBound.ToString();
                 MessageBox.Show($"Feed me with integer between between {lowerBound} mm and {upperBound} mm." +
                         $"\nValue modified to lower limit!");
             }
             label81.ForeColor = Color.RoyalBlue;
             label82.ForeColor = Color.RoyalBlue;
-            { this.textBox40.Enabled = true; }
+            { this.dimN.Enabled = true; }
             { this.label79.Enabled = true; }
             { this.label80.Enabled = true; }
         }
@@ -1165,19 +1209,19 @@ namespace RevitFeederUI
         {
             int lowerBound = 500;
             int upperBound = 3000;
-            if (int.TryParse(textBox40.Text, out int dimNValue))
+            if (int.TryParse(dimN.Text, out int dimNValue))
             {
 
 
                 if (dimNValue < lowerBound)
                 {
-                    textBox40.Text = lowerBound.ToString();
+                    dimN.Text = lowerBound.ToString();
                     MessageBox.Show($"Value has to fall between {lowerBound} mm and {upperBound} mm." +
                         $"\nValue modified to lower limit!");
                 }
                 else if (dimNValue > upperBound)
                 {
-                    textBox40.Text = upperBound.ToString();
+                    dimN.Text = upperBound.ToString();
                     MessageBox.Show($"Value has to fall between {lowerBound} mm and {upperBound} mm." +
                         $"\nValue modified to upper limit!");
                 }
@@ -1185,28 +1229,128 @@ namespace RevitFeederUI
             }
             else
             {
-                textBox40.Text = lowerBound.ToString();
+                dimN.Text = lowerBound.ToString();
                 MessageBox.Show($"Feed me with integer between between {lowerBound} mm and {upperBound} mm." +
                         $"\nValue modified to lower limit!");
             }
             label79.ForeColor = Color.RoyalBlue;
             label80.ForeColor = Color.RoyalBlue;
-            { this.textBox39.Enabled = true; }
+            { this.dimO.Enabled = true; }
             { this.label77.Enabled = true; }
             { this.label78.Enabled = true; }
         }
-        // DimO validator
+        // DimP validator
         private void label76_Click(object sender, EventArgs e)
         {
             double dn3Value;
             int lowerBound = 0;
             int upperBound = 0;
 
-            if (double.TryParse(comboBox3.Text, out dn3Value) && int.TryParse(textBox39.Text, out int dimOValue))
+            if (double.TryParse(dn3.Text, out dn3Value) && int.TryParse(dimP.Text, out int dimPValue))
             {
-                //DN3.Value < 80 ? new Length(500 + Math.Ceiling(DN3.Value / 4) * 10, "mm")
-                //: DN3.Value < 125 ? new Length(500 + Math.Ceiling(DN3.Value / 6) * 10, "mm")
-                //     : new Length(500 + Math.Ceiling(DN3.Value / 7) * 10, "mm")
+                if (dn3Value < 80)
+                {
+                    lowerBound = Convert.ToInt32(2 * Math.Ceiling(dn3Value / 0.4) + 50);
+                }
+                else if (dn3Value < 125)
+                {
+                    lowerBound = Convert.ToInt32(2 * Math.Ceiling(dn3Value / 0.6) + 50);
+                }
+                else
+                {
+                    lowerBound = Convert.ToInt32(2 * Math.Ceiling(dn3Value / 0.7) + 50);
+                }
+
+                if (dn3Value < 80)
+                {
+                    upperBound = Convert.ToInt32(2 * Math.Ceiling(dn3Value / 0.4) + 1000);
+                }
+                else if (dn3Value < 125)
+                {
+                    upperBound = Convert.ToInt32(2 * Math.Ceiling(dn3Value / 0.6) + 1000);
+                }
+                else
+                {
+                    upperBound = Convert.ToInt32(2 * Math.Ceiling(dn3Value / 0.7) + 1000);
+                }
+
+                if (dimPValue < lowerBound)
+                {
+                    dimP.Text = lowerBound.ToString();
+                    MessageBox.Show($"Value has to fall between {lowerBound} mm and {upperBound} mm." +
+                        $"\nValue modified to lower limit!");
+                }
+                else if (dimPValue > upperBound)
+                {
+                    dimP.Text = upperBound.ToString();
+                    MessageBox.Show($"Value has to fall between {lowerBound} mm and {upperBound} mm." +
+                        $"\nValue modified to upper limit!");
+                }
+
+                else { }
+            }
+            else
+            {
+                if (dn3Value < 80)
+                {
+                    lowerBound = Convert.ToInt32(2 * (dn3Value + Math.Ceiling(dn3Value / 4) * 10) + 50);
+                }
+                else if (dn3Value < 125)
+                {
+                    lowerBound = Convert.ToInt32(2 * (dn3Value + Math.Ceiling(dn3Value / 6) * 10) + 50);
+                }
+                else
+                {
+                    lowerBound = Convert.ToInt32(2 * (dn3Value + Math.Ceiling(dn3Value / 7) * 10 + 50));
+                }
+
+                if (dn3Value < 80)
+                {
+                    upperBound = Convert.ToInt32(2 * (dn3Value + Math.Ceiling(dn3Value / 4) * 10) + 1000);
+                }
+                else if (dn3Value < 125)
+                {
+                    upperBound = Convert.ToInt32(2 * (dn3Value + Math.Ceiling(dn3Value / 6) * 10) + 1000);
+                }
+                else
+                {
+                    upperBound = Convert.ToInt32(2 * (dn3Value + Math.Ceiling(dn3Value / 7) * 10) + 1000);
+                }
+
+                dimP.Text = lowerBound.ToString();
+                MessageBox.Show($"Feed me with integer between between {lowerBound} mm and {upperBound} mm." +
+                        $"\nValue modified to lower limit!");
+            }
+            label76.ForeColor = Color.RoyalBlue;
+            label75.ForeColor = Color.RoyalBlue;
+            { this.dimQ.Enabled = true; }
+            { this.label73.Enabled = true; }
+            { this.label74.Enabled = true; }
+        }
+        // SAVE
+        private void button1_Click(object sender, EventArgs e)
+        {
+            var designPeakHourFlow = new VolumetricFlow(Convert.ToDouble(flow.Text));
+            var head = new Length(Convert.ToDouble(this.head.Text));
+            var dutyPumpsCount = Convert.ToInt32(duty.Text);
+            var standbyPumpsCount = Convert.ToInt32(standby.Text);
+            var numberOfPumps = dutyPumpsCount + standbyPumpsCount;
+            string uniqueId = $"{DateTime.UtcNow:yyyyMMddHHmmssfff}-F{designPeakHourFlow}-D{dutyPumpsCount}-S{standbyPumpsCount}";
+            var revitFeed = new RevitFeederDTO(designPeakHourFlow, head, dutyPumpsCount, standbyPumpsCount, numberOfPumps);
+            WriteToJsonFile<RevitFeederDTO>($"C:\\RevitTest\\{uniqueId}.json", revitFeed);
+
+            MessageBox.Show($"Saved to" +
+                        $"\nC:\\RevitTest\\{uniqueId}.json");
+        }
+        // DimO validator
+        private void label78_Click(object sender, EventArgs e)
+        {
+            double dn3Value;
+            int lowerBound = 0;
+            int upperBound = 0;
+
+            if (double.TryParse(dn3.Text, out dn3Value) && int.TryParse(dimO.Text, out int dimOValue))
+            {
                 if (dn3Value < 80)
                 {
                     lowerBound = Convert.ToInt32(100 + dn3Value + Math.Ceiling(dn3Value / 4) * 10);
@@ -1235,13 +1379,13 @@ namespace RevitFeederUI
 
                 if (dimOValue < lowerBound)
                 {
-                    textBox39.Text = lowerBound.ToString();
+                    dimO.Text = lowerBound.ToString();
                     MessageBox.Show($"Value has to fall between {lowerBound} mm and {upperBound} mm." +
                         $"\nValue modified to lower limit!");
                 }
                 else if (dimOValue > upperBound)
                 {
-                    textBox39.Text = upperBound.ToString();
+                    dimO.Text = upperBound.ToString();
                     MessageBox.Show($"Value has to fall between {lowerBound} mm and {upperBound} mm." +
                         $"\nValue modified to upper limit!");
                 }
@@ -1276,28 +1420,746 @@ namespace RevitFeederUI
                     upperBound = Convert.ToInt32(1000 + dn3Value + Math.Ceiling(dn3Value / 7) * 10);
                 }
 
-                textBox39.Text = lowerBound.ToString();
+                dimO.Text = lowerBound.ToString();
                 MessageBox.Show($"Feed me with integer between between {lowerBound} mm and {upperBound} mm." +
                         $"\nValue modified to lower limit!");
             }
             label77.ForeColor = Color.RoyalBlue;
             label78.ForeColor = Color.RoyalBlue;
-            { this.textBox38.Enabled = true; }
+            { this.dimP.Enabled = true; }
             { this.label75.Enabled = true; }
             { this.label76.Enabled = true; }
         }
-
-        private void button1_Click(object sender, EventArgs e)
+        // DimQ validator
+        private void label74_Click(object sender, EventArgs e)
         {
-            var designPeakHourFlow = new VolumetricFlow(Convert.ToDouble(textBox47.Text));
-            var head = new Length(Convert.ToDouble(textBox27.Text));
-            var dutyPumpsCount = Convert.ToInt32(textBox49.Text);
-            var standbyPumpsCount = Convert.ToInt32(textBox48.Text);
-            var numberOfPumps = dutyPumpsCount + standbyPumpsCount;
-            var revitFeed = new RevitFeederDTO(designPeakHourFlow, head, dutyPumpsCount, standbyPumpsCount, numberOfPumps);
-            WriteToJsonFile<RevitFeederDTO>("C:\\RevitTest\\Kutya.json", revitFeed);
+            double dn3Value = 0;
+            double dn4Value = 0;
+            int lowerBound = 0;
+            int upperBound = 0;
+
+            if (double.TryParse(dn3.Text, out dn3Value) && double.TryParse(dn4.Text, out dn4Value) && int.TryParse(dimQ.Text, out int dimQValue))
+            {
+                if (dn3Value < 80)
+                {
+                    lowerBound = Convert.ToInt32(dn4Value + 15 + Math.Ceiling(dn3Value / 0.4));
+                }
+                else if (dn3Value < 125)
+                {
+                    lowerBound = Convert.ToInt32(dn4Value + 15 + Math.Ceiling(dn3Value / 0.6));
+                }
+                else
+                {
+                    lowerBound = Convert.ToInt32(dn4Value + 15 + Math.Ceiling(dn3Value / 0.7));
+                }
+
+                if (dn3Value < 80)
+                {
+                    upperBound = Convert.ToInt32(1000 + Math.Ceiling(dn3Value / 0.4));
+                }
+                else if (dn3Value < 125)
+                {
+                    upperBound = Convert.ToInt32(1000 + Math.Ceiling(dn3Value / 0.6));
+                }
+                else
+                {
+                    upperBound = Convert.ToInt32(1000 + Math.Ceiling(dn3Value / 0.7));
+                }
+
+                if (dimQValue < lowerBound)
+                {
+                    dimQ.Text = lowerBound.ToString();
+                    MessageBox.Show($"Value has to fall between {lowerBound} mm and {upperBound} mm." +
+                        $"\nValue modified to lower limit!");
+                }
+                else if (dimQValue > upperBound)
+                {
+                    dimQ.Text = upperBound.ToString();
+                    MessageBox.Show($"Value has to fall between {lowerBound} mm and {upperBound} mm." +
+                        $"\nValue modified to upper limit!");
+                }
+
+                else { }
+            }
+            else
+            {
+                if (dn3Value < 80)
+                {
+                    lowerBound = Convert.ToInt32(dn4Value + 15 + Math.Ceiling(dn3Value / 0.4));
+                }
+                else if (dn3Value < 125)
+                {
+                    lowerBound = Convert.ToInt32(dn4Value + 15 + Math.Ceiling(dn3Value / 0.6));
+                }
+                else
+                {
+                    lowerBound = Convert.ToInt32(dn4Value + 15 + Math.Ceiling(dn3Value / 0.7));
+                }
+
+                if (dn3Value < 80)
+                {
+                    upperBound = Convert.ToInt32(1000 + Math.Ceiling(dn3Value / 0.4));
+                }
+                else if (dn3Value < 125)
+                {
+                    upperBound = Convert.ToInt32(1000 + Math.Ceiling(dn3Value / 0.6));
+                }
+                else
+                {
+                    upperBound = Convert.ToInt32(1000 + Math.Ceiling(dn3Value / 0.7));
+                }
+
+                dimQ.Text = lowerBound.ToString();
+                MessageBox.Show($"Feed me with integer between between {lowerBound} mm and {upperBound} mm." +
+                        $"\nValue modified to lower limit!");
+            }
+            label73.ForeColor = Color.RoyalBlue;
+            label74.ForeColor = Color.RoyalBlue;
+            { this.dimR.Enabled = true; }
+            { this.label91.Enabled = true; }
+            { this.label92.Enabled = true; }
+        }
+        // DimR validator
+        private void label92_Click(object sender, EventArgs e)
+        {
+            double dn4Value;
+
+            if (double.TryParse(dn4.Text, out dn4Value) && int.TryParse(dimR.Text, out int dimRValue))
+            {
+                int lowerBound = Convert.ToInt32(Math.Round(((dn4Value / 2) + 510) / 5) * 5);
+                int upperBound = Convert.ToInt32(Math.Round(((dn4Value / 2) + 1510) / 5) * 5);
+
+                if (dimRValue < lowerBound)
+                {
+                    dimR.Text = lowerBound.ToString();
+                    MessageBox.Show($"Value has to fall between {lowerBound} mm and {upperBound} mm." +
+                        $"\nValue modified to lower limit!");
+                }
+                else if (dimRValue > upperBound)
+                {
+                    dimR.Text = upperBound.ToString();
+                    MessageBox.Show($"Value has to fall between {lowerBound} mm and {upperBound} mm." +
+                        $"\nValue modified to upper limit!");
+                }
+
+                else { }
+            }
+            else
+            {
+                int lowerBound = Convert.ToInt32(Math.Round(((dn4Value / 2) + 510) / 5) * 5);
+                int upperBound = Convert.ToInt32(Math.Round(((dn4Value / 2) + 1510) / 5) * 5);
+                dimR.Text = lowerBound.ToString();
+                MessageBox.Show($"Feed me with integer between between {lowerBound} mm and {upperBound} mm." +
+                        $"\nValue modified to lower limit!");
+            }
+            label91.ForeColor = Color.RoyalBlue;
+            label92.ForeColor = Color.RoyalBlue;
+            { this.levA.Enabled = true; }
+            { this.label41.Enabled = true; }
+            { this.label42.Enabled = true; }
+        }
+        // DimS validator
+        private void label90_Click(object sender, EventArgs e)
+        {
+            double dn4Value;
+
+            if (double.TryParse(dn4.Text, out dn4Value) && int.TryParse(dimS.Text, out int dimSValue))
+            {
+                int lowerBound = Convert.ToInt32(Math.Round(dn4Value * 1.5));
+                int upperBound = 1000;
+
+                if (dimSValue < lowerBound)
+                {
+                    dimS.Text = lowerBound.ToString();
+                    MessageBox.Show($"Value has to fall between {lowerBound} mm and {upperBound} mm." +
+                        $"\nValue modified to lower limit!");
+                }
+                else if (dimSValue > upperBound)
+                {
+                    dimS.Text = upperBound.ToString();
+                    MessageBox.Show($"Value has to fall between {lowerBound} mm and {upperBound} mm." +
+                        $"\nValue modified to upper limit!");
+                }
+
+                else { }
+            }
+            else
+            {
+                int lowerBound = Convert.ToInt32(Math.Round(dn4Value * 1.5));
+                int upperBound = 1000;
+                dimS.Text = lowerBound.ToString();
+                MessageBox.Show($"Feed me with integer between between {lowerBound} mm and {upperBound} mm." +
+                        $"\nValue modified to lower limit!");
+            }
+            label89.ForeColor = Color.RoyalBlue;
+            label90.ForeColor = Color.RoyalBlue;
+            { this.dimT.Enabled = true; }
+            { this.label67.Enabled = true; }
+            { this.label68.Enabled = true; }
+        }
+
+
+        // DimT validator
+        private void label68_Click(object sender, EventArgs e)
+        {
+            double dn3Value = 0;
+            double dimSValue = 0;
+            int levAValue = 0;
+            int levBValue = 0;
+            int levCValue = 0;
+            int levDValue = 0;
+            int levEValue = 0;
+            int levFValue = 0;
+            int levGValue = 0;
+            int levHValue = 0;
+            int levIValue = 0;
+
+
+            if (double.TryParse(dn3.Text, out dn3Value) && double.TryParse(dimS.Text, out dimSValue) && int.TryParse(dimT.Text, out int dimTValue)
+                && int.TryParse(levA.Text, out levAValue) && int.TryParse(levB.Text, out levBValue) && int.TryParse(levC.Text, out levCValue)
+                && int.TryParse(levD.Text, out levDValue) && int.TryParse(levE.Text, out levEValue) && int.TryParse(levF.Text, out levFValue)
+                && int.TryParse(levG.Text, out levGValue) && int.TryParse(levH.Text, out levHValue) && int.TryParse(levI.Text, out levIValue))
+            {
+                int lowerBound;
+                int upperBound = levAValue + levBValue + levCValue + levDValue + levEValue + levFValue + levGValue + levHValue + levIValue;
+                if (dn3Value < 80)
+                {
+                    lowerBound = Convert.ToInt32(dimSValue + Math.Ceiling(dn3Value / 0.4) + dn3Value);
+                }
+                else if (dn3Value < 125)
+                {
+                    lowerBound = Convert.ToInt32(dimSValue + Math.Ceiling(dn3Value / 0.6) + dn3Value);
+                }
+                else
+                {
+                    lowerBound = Convert.ToInt32(dimSValue + Math.Ceiling(dn3Value / 0.7) + dn3Value);
+                }
+
+                if (dimTValue < lowerBound)
+                {
+                    dimT.Text = lowerBound.ToString();
+                    MessageBox.Show($"Value has to fall between {lowerBound} mm and {upperBound} mm." +
+                        $"\nValue modified to lower limit!");
+                }
+                else if (dimTValue > upperBound)
+                {
+                    dimT.Text = upperBound.ToString();
+                    MessageBox.Show($"Value has to fall between {lowerBound} mm and {upperBound} mm." +
+                        $"\nValue modified to upper limit!");
+                }
+
+                else { }
+            }
+            else
+            {
+                int lowerBound;
+                int upperBound = levAValue + levBValue + levCValue + levDValue + levEValue + levFValue + levGValue + levHValue + levIValue;
+                if (dn3Value < 80)
+                {
+                    lowerBound = Convert.ToInt32(dimSValue + Math.Ceiling(dn3Value / 0.4));
+                }
+                else if (dn3Value < 125)
+                {
+                    lowerBound = Convert.ToInt32(dimSValue + Math.Ceiling(dn3Value / 0.6));
+                }
+                else
+                {
+                    lowerBound = Convert.ToInt32(dimSValue + Math.Ceiling(dn3Value / 0.7));
+                }
+
+                dimT.Text = lowerBound.ToString();
+                MessageBox.Show($"Feed me with integer between between {lowerBound} mm and {upperBound} mm." +
+                        $"\nValue modified to lower limit!");
+            }
+            label67.ForeColor = Color.RoyalBlue;
+            label68.ForeColor = Color.RoyalBlue;
+            { this.dimU.Enabled = true; }
+            { this.label65.Enabled = true; }
+            { this.label66.Enabled = true; }
 
         }
+        // LevA validator
+        private void label42_Click(object sender, EventArgs e)
+        {
+            int dnInletValue = 0;
+            int lowerBound = 500;
+            int upperBound = 5000;
+            if (int.TryParse(levA.Text, out int levAValue) && int.TryParse(dnInlet.Text, out dnInletValue))
+            {
+                if (2 * dnInletValue < 500)
+                { lowerBound = 500; }
+                else { lowerBound = 2 * dnInletValue; }
+
+                if (levAValue < lowerBound)
+                {
+                    levA.Text = lowerBound.ToString();
+                    MessageBox.Show($"Value has to fall between {lowerBound} mm and {upperBound} mm." +
+                        $"\nValue modified to lower limit!");
+                }
+                else if (levAValue > upperBound)
+                {
+                    levA.Text = upperBound.ToString();
+                    MessageBox.Show($"Value has to fall between {lowerBound} mm and {upperBound} mm." +
+                        $"\nValue modified to upper limit!");
+                }
+                else { }
+            }
+            else
+            {
+                levA.Text = lowerBound.ToString();
+                MessageBox.Show($"Feed me with integer between between {lowerBound} mm and {upperBound} mm." +
+                        $"\nValue modified to lower limit!");
+            }
+            label41.ForeColor = Color.RoyalBlue;
+            label42.ForeColor = Color.RoyalBlue;
+            { this.levB.Enabled = true; }
+            { this.label39.Enabled = true; }
+            { this.label40.Enabled = true; }
+        }
+        // LevB validator
+        private void label40_Click(object sender, EventArgs e)
+        {
+            int levAValue = 0;
+            int levBValue = 0;
+            int lowerBound = 0;
+            int upperBound = 5000;
+            if (int.TryParse(levA.Text, out levAValue) && int.TryParse(levB.Text, out levBValue))
+            {
+                if (levAValue + levBValue < 500)
+                { lowerBound = 500 - levAValue; }
+                else { lowerBound = levBValue; }
+
+                if (levBValue < lowerBound)
+                {
+                    levB.Text = lowerBound.ToString();
+                    MessageBox.Show($"Value has to fall between {lowerBound} mm and {upperBound} mm." +
+                        $"\nValue modified to lower limit!");
+                }
+                else if (levBValue > upperBound)
+                {
+                    levB.Text = upperBound.ToString();
+                    MessageBox.Show($"Value has to fall between {lowerBound} mm and {upperBound} mm." +
+                        $"\nValue modified to upper limit!");
+                }
+                else { }
+            }
+            else
+            {
+                levB.Text = lowerBound.ToString();
+                MessageBox.Show($"Feed me with integer between between {lowerBound} mm and {upperBound} mm." +
+                        $"\nValue modified to lower limit!");
+            }
+            label39.ForeColor = Color.RoyalBlue;
+            label40.ForeColor = Color.RoyalBlue;
+            { this.levC.Enabled = true; }
+            { this.label37.Enabled = true; }
+            { this.label38.Enabled = true; }
+        }
+        // LevC validator
+        private void label38_Click(object sender, EventArgs e)
+        {
+            int lowerBound = 200;
+            int upperBound = 5000;
+            if (int.TryParse(levC.Text, out int levCValue))
+            {
+                if (levCValue < lowerBound)
+                {
+                    levC.Text = lowerBound.ToString();
+                    MessageBox.Show($"Value has to fall between {lowerBound} mm and {upperBound} mm." +
+                        $"\nValue modified to lower limit!");
+                }
+                else if (levCValue > upperBound)
+                {
+                    levC.Text = upperBound.ToString();
+                    MessageBox.Show($"Value has to fall between {lowerBound} mm and {upperBound} mm." +
+                        $"\nValue modified to upper limit!");
+                }
+                else { }
+            }
+            else
+            {
+                levC.Text = lowerBound.ToString();
+                MessageBox.Show($"Feed me with integer between between {lowerBound} mm and {upperBound} mm." +
+                        $"\nValue modified to lower limit!");
+            }
+            label37.ForeColor = Color.RoyalBlue;
+            label38.ForeColor = Color.RoyalBlue;
+            { this.levD.Enabled = true; }
+            { this.label35.Enabled = true; }
+            { this.label36.Enabled = true; }
+        }
+        // LevD validator
+        private void label36_Click(object sender, EventArgs e)
+        {
+            int lowerBound = 200;
+            int upperBound = 5000;
+            if (int.TryParse(levD.Text, out int levDValue))
+            {
+                if (levDValue < lowerBound)
+                {
+                    levD.Text = lowerBound.ToString();
+                    MessageBox.Show($"Value has to fall between {lowerBound} mm and {upperBound} mm." +
+                        $"\nValue modified to lower limit!");
+                }
+                else if (levDValue > upperBound)
+                {
+                    levD.Text = upperBound.ToString();
+                    MessageBox.Show($"Value has to fall between {lowerBound} mm and {upperBound} mm." +
+                        $"\nValue modified to upper limit!");
+                }
+                else { }
+            }
+            else
+            {
+                levD.Text = lowerBound.ToString();
+                MessageBox.Show($"Feed me with integer between between {lowerBound} mm and {upperBound} mm." +
+                        $"\nValue modified to lower limit!");
+            }
+            label35.ForeColor = Color.RoyalBlue;
+            label36.ForeColor = Color.RoyalBlue;
+            { this.levE.Enabled = true; }
+            { this.label33.Enabled = true; }
+            { this.label34.Enabled = true; }
+        }
+        // LevE validator
+        private void label34_Click(object sender, EventArgs e)
+        {
+            int lowerBound = 200;
+            int upperBound = 5000;
+            if (int.TryParse(levE.Text, out int levEValue))
+            {
+                if (levEValue < lowerBound)
+                {
+                    levE.Text = lowerBound.ToString();
+                    MessageBox.Show($"Value has to fall between {lowerBound} mm and {upperBound} mm." +
+                        $"\nValue modified to lower limit!");
+                }
+                else if (levEValue > upperBound)
+                {
+                    levE.Text = upperBound.ToString();
+                    MessageBox.Show($"Value has to fall between {lowerBound} mm and {upperBound} mm." +
+                        $"\nValue modified to upper limit!");
+                }
+                else { }
+            }
+            else
+            {
+                levE.Text = lowerBound.ToString();
+                MessageBox.Show($"Feed me with integer between between {lowerBound} mm and {upperBound} mm." +
+                        $"\nValue modified to lower limit!");
+            }
+            label33.ForeColor = Color.RoyalBlue;
+            label34.ForeColor = Color.RoyalBlue;
+            { this.levF.Enabled = true; }
+            { this.label31.Enabled = true; }
+            { this.label32.Enabled = true; }
+        }
+        // LevF validator
+        private void label32_Click(object sender, EventArgs e)
+        {
+            int lowerBound = 200;
+            int upperBound = 5000;
+            if (int.TryParse(levF.Text, out int levFValue))
+            {
+                if (levFValue < lowerBound)
+                {
+                    levE.Text = lowerBound.ToString();
+                    MessageBox.Show($"Value has to fall between {lowerBound} mm and {upperBound} mm." +
+                        $"\nValue modified to lower limit!");
+                }
+                else if (levFValue > upperBound)
+                {
+                    levF.Text = upperBound.ToString();
+                    MessageBox.Show($"Value has to fall between {lowerBound} mm and {upperBound} mm." +
+                        $"\nValue modified to upper limit!");
+                }
+                else { }
+            }
+            else
+            {
+                levF.Text = lowerBound.ToString();
+                MessageBox.Show($"Feed me with integer between between {lowerBound} mm and {upperBound} mm." +
+                        $"\nValue modified to lower limit!");
+            }
+            label31.ForeColor = Color.RoyalBlue;
+            label32.ForeColor = Color.RoyalBlue;
+            { this.levG.Enabled = true; }
+            { this.label29.Enabled = true; }
+            { this.label30.Enabled = true; }
+        }
+        // LevG validator
+        private void label30_Click(object sender, EventArgs e)
+        {
+            int lowerBound = 200;
+            int upperBound = 5000;
+            if (int.TryParse(levG.Text, out int levGValue))
+            {
+                if (levGValue < lowerBound)
+                {
+                    levG.Text = lowerBound.ToString();
+                    MessageBox.Show($"Value has to fall between {lowerBound} mm and {upperBound} mm." +
+                        $"\nValue modified to lower limit!");
+                }
+                else if (levGValue > upperBound)
+                {
+                    levG.Text = upperBound.ToString();
+                    MessageBox.Show($"Value has to fall between {lowerBound} mm and {upperBound} mm." +
+                        $"\nValue modified to upper limit!");
+                }
+                else { }
+            }
+            else
+            {
+                levG.Text = lowerBound.ToString();
+                MessageBox.Show($"Feed me with integer between between {lowerBound} mm and {upperBound} mm." +
+                        $"\nValue modified to lower limit!");
+            }
+            label29.ForeColor = Color.RoyalBlue;
+            label30.ForeColor = Color.RoyalBlue;
+            { this.levH.Enabled = true; }
+            { this.label27.Enabled = true; }
+            { this.label28.Enabled = true; }
+        }
+        // LevH validator
+        private void label28_Click(object sender, EventArgs e)
+        {
+            int lowerBound = 200;
+            int upperBound = 5000;
+            if (int.TryParse(levH.Text, out int levHValue))
+            {
+                if (levHValue < lowerBound)
+                {
+                    levH.Text = lowerBound.ToString();
+                    MessageBox.Show($"Value has to fall between {lowerBound} mm and {upperBound} mm." +
+                        $"\nValue modified to lower limit!");
+                }
+                else if (levHValue > upperBound)
+                {
+                    levH.Text = upperBound.ToString();
+                    MessageBox.Show($"Value has to fall between {lowerBound} mm and {upperBound} mm." +
+                        $"\nValue modified to upper limit!");
+                }
+                else { }
+            }
+            else
+            {
+                levH.Text = lowerBound.ToString();
+                MessageBox.Show($"Feed me with integer between between {lowerBound} mm and {upperBound} mm." +
+                        $"\nValue modified to lower limit!");
+            }
+            label27.ForeColor = Color.RoyalBlue;
+            label28.ForeColor = Color.RoyalBlue;
+            { this.levI.Enabled = true; }
+            { this.label43.Enabled = true; }
+            { this.label44.Enabled = true; }
+        }
+        // LevI validator
+        private void label44_Click(object sender, EventArgs e)
+        {
+            int lowerBound = 200;
+            int upperBound = 5000;
+            if (int.TryParse(levI.Text, out int levIValue))
+            {
+                if (levIValue < lowerBound)
+                {
+                    levI.Text = lowerBound.ToString();
+                    MessageBox.Show($"Value has to fall between {lowerBound} mm and {upperBound} mm." +
+                        $"\nValue modified to lower limit!");
+                }
+                else if (levIValue > upperBound)
+                {
+                    levI.Text = upperBound.ToString();
+                    MessageBox.Show($"Value has to fall between {lowerBound} mm and {upperBound} mm." +
+                        $"\nValue modified to upper limit!");
+                }
+                else { }
+            }
+            else
+            {
+                levI.Text = lowerBound.ToString();
+                MessageBox.Show($"Feed me with integer between between {lowerBound} mm and {upperBound} mm." +
+                        $"\nValue modified to lower limit!");
+            }
+            label43.ForeColor = Color.RoyalBlue;
+            label44.ForeColor = Color.RoyalBlue;
+            { this.dimS.Enabled = true; }
+            { this.label89.Enabled = true; }
+            { this.label90.Enabled = true; }
+        }
+        // DimU validator
+        private void label66_Click(object sender, EventArgs e)
+        {
+            int lowerBound = 100;
+            int upperBound = 400;
+            if (int.TryParse(dimU.Text, out int dimUValue))
+            {
+                if (dimUValue < lowerBound)
+                {
+                    dimU.Text = lowerBound.ToString();
+                    MessageBox.Show($"Value has to fall between {lowerBound} mm and {upperBound} mm." +
+                        $"\nValue modified to lower limit!");
+                }
+                else if (dimUValue > upperBound)
+                {
+                    dimU.Text = upperBound.ToString();
+                    MessageBox.Show($"Value has to fall between {lowerBound} mm and {upperBound} mm." +
+                        $"\nValue modified to upper limit!");
+                }
+                else { }
+            }
+            else
+            {
+                dimU.Text = lowerBound.ToString();
+                MessageBox.Show($"Feed me with integer between between {lowerBound} mm and {upperBound} mm." +
+                        $"\nValue modified to lower limit!");
+            }
+            label65.ForeColor = Color.RoyalBlue;
+            label66.ForeColor = Color.RoyalBlue;
+            { this.dimV.Enabled = true; }
+            { this.label63.Enabled = true; }
+            { this.label64.Enabled = true; }
+        }
+        // DimV validator
+        private void label64_Click(object sender, EventArgs e)
+        {
+            int lowerBound = 100;
+            int upperBound = 400;
+            if (int.TryParse(dimV.Text, out int dimVValue))
+            {
+                if (dimVValue < lowerBound)
+                {
+                    dimV.Text = lowerBound.ToString();
+                    MessageBox.Show($"Value has to fall between {lowerBound} mm and {upperBound} mm." +
+                        $"\nValue modified to lower limit!");
+                }
+                else if (dimVValue > upperBound)
+                {
+                    dimV.Text = upperBound.ToString();
+                    MessageBox.Show($"Value has to fall between {lowerBound} mm and {upperBound} mm." +
+                        $"\nValue modified to upper limit!");
+                }
+                else { }
+            }
+            else
+            {
+                dimV.Text = lowerBound.ToString();
+                MessageBox.Show($"Feed me with integer between between {lowerBound} mm and {upperBound} mm." +
+                        $"\nValue modified to lower limit!");
+            }
+            label63.ForeColor = Color.RoyalBlue;
+            label64.ForeColor = Color.RoyalBlue;
+            { this.dimX.Enabled = true; }
+            { this.label61.Enabled = true; }
+            { this.label62.Enabled = true; }
+        }
+        // DimX validator
+        private void label62_Click(object sender, EventArgs e)
+        {
+            int dimKValue = 0;
+            int dimHValue = 0;
+            int dimLValue = 0;
+            int dutyValue = 0;
+            int standbyValue = 0;
+
+            if (int.TryParse(dimX.Text, out int dimXValue) && int.TryParse(dimK.Text, out dimKValue)
+                && int.TryParse(dimH.Text, out dimHValue) && int.TryParse(dimL.Text, out dimLValue)
+                && int.TryParse(duty.Text, out dutyValue) && int.TryParse(standby.Text, out standbyValue))
+            {
+                int noPumps = dutyValue + standbyValue;
+                int lowerBound = 2 * dimKValue + noPumps * dimHValue + (noPumps - 1) * dimLValue;
+                int upperBound = 2 * dimKValue + (noPumps + 1) * dimHValue + noPumps * dimLValue;
+                if (dimXValue < lowerBound)
+                {
+                    dimX.Text = lowerBound.ToString();
+                    MessageBox.Show($"Value has to fall between {lowerBound} mm and {upperBound} mm." +
+                        $"\nValue modified to lower limit!");
+                }
+                else if (dimXValue > upperBound)
+                {
+                    dimX.Text = upperBound.ToString();
+                    MessageBox.Show($"Value has to fall between {lowerBound} mm and {upperBound} mm." +
+                        $"\nValue modified to upper limit!");
+                }
+                else { }
+            }
+            else
+            {
+                int noPumps = dutyValue + standbyValue;
+                int lowerBound = 2 * dimKValue + noPumps * dimHValue + (noPumps - 1) * dimLValue;
+                int upperBound = 2 * dimKValue + (noPumps + 1) * dimHValue + noPumps * dimLValue;
+                dimX.Text = lowerBound.ToString();
+                MessageBox.Show($"Feed me with integer between between {lowerBound} mm and {upperBound} mm." +
+                        $"\nValue modified to lower limit!");
+            }
+            label61.ForeColor = Color.RoyalBlue;
+            label62.ForeColor = Color.RoyalBlue;
+            { this.dimY.Enabled = true; }
+            { this.label59.Enabled = true; }
+            { this.label60.Enabled = true; }
+        }
+        // DimY validator
+        private void label60_Click(object sender, EventArgs e)
+        {
+            // round((DimM + DimE + DimF + DimG + DimH / 2) / 10 mm) * 10 mm + 800 mm
+            double dimMValue = 0;
+            double dimEValue = 0;
+            double dimFValue = 0;
+            double dimGValue = 0;
+            double dimHValue = 0;
+            double dimKValue = 0;
+            double dimLValue = 0;
+            double dn4Value = 0;
+            double dimNValue = 0;
+            double dimOValue = 0;
+            double dimPValue = 0;
+            double dimQValue = 0;
+            double dimRValue = 0;
+            double dimUValue = 0;
+            double dimVValue = 0;
+            double dutyValue = 0;
+            double standbyValue = 0;
+            double noPumps = dutyValue + standbyValue;
+            double dnInletValue = 0;
+            int lowerBound = (int)Math.Ceiling(((dimMValue + dimEValue + dimFValue + dimGValue + dimHValue / 2) / 10) * 10 + 800 + Math.Max(dnInletValue * 2, 500) + 150);
+            int upperBound = (int)Math.Ceiling(((dimMValue + dimEValue + dimFValue + dimGValue + dimHValue / 2) / 10) * 10 + 800 + Math.Max(dnInletValue * 2, 500) + 150 + 2000);
+            if (int.TryParse(dimY.Text, out int dimYValue) && double.TryParse(dimM.Text, out dimMValue)
+                && double.TryParse(dimE.Text, out dimEValue) && double.TryParse(dimF.Text, out dimFValue)
+                && double.TryParse(dimG.Text, out dimGValue) && double.TryParse(dimH.Text, out dimHValue)
+                && double.TryParse(dnInlet.Text, out dnInletValue) && double.TryParse(dn4.Text, out dn4Value)
+                && double.TryParse(dimK.Text, out dimKValue) && double.TryParse(dimL.Text, out dimLValue)
+                && double.TryParse(duty.Text, out dutyValue) && double.TryParse(standby.Text, out standbyValue)
+                && double.TryParse(dimN.Text, out dimNValue) && double.TryParse(dimO.Text, out dimOValue)
+                && double.TryParse(dimP.Text, out dimPValue) && double.TryParse(dimQ.Text, out dimQValue)
+                && double.TryParse(dimU.Text, out dimUValue) && double.TryParse(dimV.Text, out dimVValue)
+                && double.TryParse(dimR.Text, out dimRValue))
+            {
+                if (dimYValue < lowerBound)
+                {
+                    dimY.Text = lowerBound.ToString();
+                    MessageBox.Show($"Value has to fall between {lowerBound} mm and {upperBound} mm." +
+                        $"\nValue modified to lower limit!");
+                }
+                else if (dimYValue > upperBound)
+                {
+                    dimY.Text = upperBound.ToString();
+                    MessageBox.Show($"Value has to fall between {lowerBound} mm and {upperBound} mm." +
+                        $"\nValue modified to upper limit!");
+                }
+                else { }
+            }
+            else
+            {
+                dimY.Text = lowerBound.ToString();
+                MessageBox.Show($"Feed me with integer between between {lowerBound} mm and {upperBound} mm." +
+                        $"\nValue modified to lower limit!");
+            }
+            label59.ForeColor = Color.RoyalBlue;
+            label60.ForeColor = Color.RoyalBlue;
+            { this.save.Enabled = true; }
+            dimZ.Text = (dimKValue + (noPumps - 1) * (dimHValue + dimLValue) + (dn4Value + 50) * 11).ToString();
+            dimW.Text = (dimNValue + dimOValue + dimPValue + dimQValue + dimUValue + dimVValue + dimRValue).ToString();
+        }
+
         public static void WriteToJsonFile<T>(string filePath, T objectToWrite, bool append = false) where T : new()
         {
             TextWriter writer = null;
@@ -1312,6 +2174,11 @@ namespace RevitFeederUI
                 if (writer != null)
                     writer.Close();
             }
+        }
+
+        private void label45_Click(object sender, EventArgs e)
+        {
+
         }
     }
 }
