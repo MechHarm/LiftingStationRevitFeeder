@@ -1,4 +1,6 @@
-﻿using FluentAssertions;
+﻿using LiftingStationRevitFeeder.Application;
+using LiftingStationRevitFeeder.Domain;
+using FluentAssertions;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -93,6 +95,8 @@ namespace RevitFeederUI
             { this.dn2.Enabled = true; }
             { this.label21.Enabled = true; }
             { this.label22.Enabled = true; }
+            pumpInletVelocity.Text = Math.Round(((double.Parse(flow.Text) / double.Parse(duty.Text) / 3600) / (Math.Pow(double.Parse(dn1.Text) / 1000, 2) * Math.PI / 4)), 1).ToString();
+
         }
 
         private void textBox12_TextChanged(object sender, EventArgs e)
@@ -428,7 +432,7 @@ namespace RevitFeederUI
         // DN2 validator
         private void label22_Click(object sender, EventArgs e)
         {
-            int dn1Value;
+            int dn1Value = int.Parse(dn1.SelectedItem.ToString());
             int dn2Value;
 
             if (int.TryParse(dn2.Text, out dn2Value) && int.TryParse(dn1.Text, out dn1Value))
@@ -459,7 +463,7 @@ namespace RevitFeederUI
                 int selectedIndex = dn1.SelectedIndex;
                 string smallestItemAvailable = dn1.Items[selectedIndex - 2].ToString();
                 int lowerBound = Math.Max(50, Convert.ToInt32(smallestItemAvailable));
-                int upperBound = 400;
+                int upperBound = Math.Min(400, Convert.ToInt32(dn1Value));
                 dn2.Text = lowerBound.ToString();
                 MessageBox.Show($"Feed me with integer between between {lowerBound} m and {upperBound} m." +
                         $"\nValue modified to lower limit!");
@@ -572,6 +576,7 @@ namespace RevitFeederUI
         // DNInlet validator 
         private void label93_Click(object sender, EventArgs e)
         {
+            string flowValue = flow.Text;
             string selectedItem = dnInlet.SelectedItem.ToString();
             if (selectedItem != "Select")
             {
@@ -580,6 +585,7 @@ namespace RevitFeederUI
                 label93.ForeColor = Color.RoyalBlue;
                 { this.label25.Enabled = true; }
                 { this.label26.Enabled = true; }
+                gravityPipeVelocity.Text = Math.Round(((double.Parse(flowValue) / 3600) / (Math.Pow(double.Parse(selectedItem) / 1000, 2) * Math.PI / 4)), 1).ToString();
             }
             else
             { this.dnBreath.Enabled = false; }
@@ -969,7 +975,7 @@ namespace RevitFeederUI
         // DN3 validator
         private void label70_Click(object sender, EventArgs e)
         {
-            int dn2Value = 0;
+            int dn2Value = int.Parse(dn2.SelectedItem.ToString());
             int dn3Value;
 
             if (int.TryParse(dn3.Text, out dn3Value) && int.TryParse(dn2.Text, out dn2Value))
@@ -1010,14 +1016,16 @@ namespace RevitFeederUI
             { this.dn4.Enabled = true; }
             { this.label71.Enabled = true; }
             { this.label72.Enabled = true; }
+            pressurePipeVelocity.Text = Math.Round(((double.Parse(flow.Text) / double.Parse(duty.Text) / 3600) / (Math.Pow(double.Parse(dn3.Text) / 1000, 2) * Math.PI / 4)), 1).ToString();
+
         }
         // DN4 validator
         private void label72_Click(object sender, EventArgs e)
         {
-            int dn3Value = 0;
+            int dn3Value = int.Parse(dn3.SelectedItem.ToString());
             int dn4Value;
 
-            if (int.TryParse(dn4.Text, out dn4Value) && int.TryParse(dn3.Text, out dn3Value))
+            if (int.TryParse(dn3.Text, out dn3Value) && int.TryParse(dn4.Text, out dn4Value))
             {
                 int lowerBound = dn3Value;
                 int upperBound = 500;
@@ -1053,14 +1061,14 @@ namespace RevitFeederUI
         // DN5 validator
         private void label88_Click(object sender, EventArgs e)
         {
-            int dn4Value = 0;
+            int dn4Value = int.Parse(dn4.SelectedItem.ToString());
             int dn5Value;
 
             if (int.TryParse(dn5.Text, out dn5Value) && int.TryParse(dn4.Text, out dn4Value))
             {
                 string selectedValue = dn4.SelectedItem.ToString();
                 int selectedIndex = dn4.SelectedIndex;
-                string smallestItemAvailable = dn4.Items[selectedIndex - 2].ToString();
+                string smallestItemAvailable = dn4.Items[Math.Max(1, selectedIndex - 2)].ToString();
                 int lowerBound = Convert.ToInt32(smallestItemAvailable);
                 int upperBound = dn4Value;
 
@@ -1082,7 +1090,7 @@ namespace RevitFeederUI
             {
                 string selectedValue = dn4.SelectedItem.ToString();
                 int selectedIndex = dn4.SelectedIndex;
-                string smallestItemAvailable = dn4.Items[selectedIndex - 2].ToString();
+                string smallestItemAvailable = dn4.Items[Math.Max(1, selectedIndex - 2)].ToString();
                 int lowerBound = Convert.ToInt32(smallestItemAvailable);
                 int upperBound = dn4Value;
                 dn5.Text = lowerBound.ToString();
@@ -1331,16 +1339,59 @@ namespace RevitFeederUI
         private void button1_Click(object sender, EventArgs e)
         {
             var designPeakHourFlow = new VolumetricFlow(Convert.ToDouble(flow.Text));
-            var head = new Length(Convert.ToDouble(this.head.Text));
-            var dutyPumpsCount = Convert.ToInt32(duty.Text);
-            var standbyPumpsCount = Convert.ToInt32(standby.Text);
-            var numberOfPumps = dutyPumpsCount + standbyPumpsCount;
-            string uniqueId = $"{DateTime.UtcNow:yyyyMMddHHmmssfff}-F{designPeakHourFlow}-D{dutyPumpsCount}-S{standbyPumpsCount}";
-            var revitFeed = new RevitFeederDTO(designPeakHourFlow, head, dutyPumpsCount, standbyPumpsCount, numberOfPumps);
-            WriteToJsonFile<RevitFeederDTO>($"C:\\RevitTest\\{uniqueId}.json", revitFeed);
+            var head = new Length(Convert.ToDouble(this.head.Text)*1000);
+            var dutyPumpsCount = new VolumetricFlow(Convert.ToInt32(duty.Text));
+            var standbyPumpsCount = new VolumetricFlow(Convert.ToInt32(standby.Text));
+            var numberOfPumps = new VolumetricFlow(dutyPumpsCount.Value + standbyPumpsCount.Value);
+            var dn1 = new Length(Convert.ToInt32(this.dn1.Text));
+            var dn2 = new Length(Convert.ToInt32(this.dn2.Text));
+            var dn3 = new Length(Convert.ToInt32(this.dn3.Text));
+            var dn4 = new Length(Convert.ToInt32(this.dn4.Text));
+            var dn5 = new Length(Convert.ToInt32(this.dn5.Text));
+            var dnInlet = new Length(Convert.ToInt32(this.dnInlet.Text));
+            var dnBackflow = new Length(Convert.ToInt32(this.dnBackflow.Text));
+            var dnBreath = new Length(Convert.ToInt32(this.dnBreath.Text));
+            var levA = new Length(Convert.ToInt32(this.levA.Text));
+            var levB = new Length(Convert.ToInt32(this.levB.Text));
+            var levC = new Length(Convert.ToInt32(this.levC.Text));
+            var levD = new Length(Convert.ToInt32(this.levD.Text));
+            var levE = new Length(Convert.ToInt32(this.levE.Text));
+            var levF = new Length(Convert.ToInt32(this.levF.Text));
+            var levG = new Length(Convert.ToInt32(this.levG.Text));
+            var levH = new Length(Convert.ToInt32(this.levH.Text));
+            var levI = new Length(Convert.ToInt32(this.levI.Text));
+            var dimA = new Length(Convert.ToInt32(this.dimA.Text)); 
+            var dimB = new Length(Convert.ToInt32(this.dimB.Text));
+            var dimC = new Length(Convert.ToInt32(this.dimC.Text));
+            var dimD = new Length(Convert.ToInt32(this.dimD.Text));
+            var dimE = new Length(Convert.ToInt32(this.dimE.Text));
+            var dimF = new Length(Convert.ToInt32(this.dimF.Text));
+            var dimG = new Length(Convert.ToInt32(this.dimG.Text));
+            var dimH = new Length(Convert.ToInt32(this.dimH.Text));
+            var dimI = new Length(Convert.ToInt32(this.dimI.Text));
+            var dimJ = new Length(Convert.ToInt32(this.dimJ.Text));
+            var dimK = new Length(Convert.ToInt32(this.dimK.Text));
+            var dimL = new Length(Convert.ToInt32(this.dimL.Text));
+            var dimM = new Length(Convert.ToInt32(this.dimM.Text));
+            var dimN = new Length(Convert.ToInt32(this.dimN.Text));
+            var dimO = new Length(Convert.ToInt32(this.dimO.Text));
+            var dimP = new Length(Convert.ToInt32(this.dimP.Text));
+            var dimQ = new Length(Convert.ToInt32(this.dimQ.Text));
+            var dimR = new Length(Convert.ToInt32(this.dimR.Text));
+            var dimS = new Length(Convert.ToInt32(this.dimS.Text));
+            var dimT = new Length(Convert.ToInt32(this.dimT.Text));
+            var dimU = new Length(Convert.ToInt32(this.dimU.Text));
+            var dimV = new Length(Convert.ToInt32(this.dimV.Text));
+            var dimX = new Length(Convert.ToInt32(this.dimX.Text));
+            var dimY = new Length(Convert.ToInt32(this.dimY.Text));
+            var dimW = new Length(Convert.ToInt32(this.dimW.Text));
+            var dimZ = new Length(Convert.ToInt32(this.dimZ.Text));
+            var wetWellDepth = new Length(levA.Value + levB.Value + levC.Value + levD.Value + levE.Value + levF.Value + levG.Value + levH.Value + levI.Value);
 
+            var revitFeed = new RevitFeederDTO(designPeakHourFlow, head, dutyPumpsCount, standbyPumpsCount, numberOfPumps, dn1, dn2, dn3, dn4, dn5, dnInlet, dnBackflow, dnBreath, levA, levB, levC, levD, levE, levF, levG, levH, levI, dimA, dimB, dimC, dimD, dimE, dimF, dimG, dimH, dimI, dimJ, dimK, dimL, dimM, dimN, dimO, dimP, dimQ, dimR, dimS, dimT, dimU, dimV, dimX, dimY, dimW, dimZ, wetWellDepth);
+            WriteToJsonFile<RevitFeederDTO>($"C:\\RevitTest\\AdvancedInput-Flow{designPeakHourFlow.Value}-Head{head.Value}.json", revitFeed);
             MessageBox.Show($"Saved to" +
-                        $"\nC:\\RevitTest\\{uniqueId}.json");
+                        $"\nC:\\RevitTest\\AdvancedInput-Flow{designPeakHourFlow.Value}-D{dutyPumpsCount}-S{standbyPumpsCount}-DN{dn1.Value}.json");
         }
         // DimO validator
         private void label78_Click(object sender, EventArgs e)
@@ -1433,8 +1484,8 @@ namespace RevitFeederUI
         // DimQ validator
         private void label74_Click(object sender, EventArgs e)
         {
-            double dn3Value = 0;
-            double dn4Value = 0;
+            double dn3Value = double.Parse(dn3.Text);
+            double dn4Value = double.Parse(dn4.Text);
             int lowerBound = 0;
             int upperBound = 0;
 
@@ -1602,17 +1653,17 @@ namespace RevitFeederUI
         // DimT validator
         private void label68_Click(object sender, EventArgs e)
         {
-            double dn3Value = 0;
-            double dimSValue = 0;
-            int levAValue = 0;
-            int levBValue = 0;
-            int levCValue = 0;
-            int levDValue = 0;
-            int levEValue = 0;
-            int levFValue = 0;
-            int levGValue = 0;
-            int levHValue = 0;
-            int levIValue = 0;
+            double dn3Value = double.Parse(dn3.Text);
+            double dimSValue = double.Parse(dimS.Text);
+            int levAValue = int.Parse(levA.Text);
+            int levBValue = int.Parse(levB.Text);
+            int levCValue = int.Parse(levC.Text);
+            int levDValue = int.Parse(levD.Text);
+            int levEValue = int.Parse(levE.Text);
+            int levFValue = int.Parse(levF.Text);
+            int levGValue = int.Parse(levG.Text);
+            int levHValue = int.Parse(levH.Text);
+            int levIValue = int.Parse(levI.Text);
 
 
             if (double.TryParse(dn3.Text, out dn3Value) && double.TryParse(dimS.Text, out dimSValue) && int.TryParse(dimT.Text, out int dimTValue)
@@ -1681,7 +1732,7 @@ namespace RevitFeederUI
         // LevA validator
         private void label42_Click(object sender, EventArgs e)
         {
-            int dnInletValue = 0;
+            int dnInletValue = int.Parse(dnInlet.Text);
             int lowerBound = 500;
             int upperBound = 5000;
             if (int.TryParse(levA.Text, out int levAValue) && int.TryParse(dnInlet.Text, out dnInletValue))
@@ -1719,9 +1770,9 @@ namespace RevitFeederUI
         // LevB validator
         private void label40_Click(object sender, EventArgs e)
         {
-            int levAValue = 0;
-            int levBValue = 0;
-            int lowerBound = 0;
+            int levAValue = int.Parse(levA.Text);
+            int levBValue = int.Parse(levB.Text);
+            int lowerBound = 500 - levAValue;
             int upperBound = 5000;
             if (int.TryParse(levA.Text, out levAValue) && int.TryParse(levB.Text, out levBValue))
             {
@@ -1985,6 +2036,9 @@ namespace RevitFeederUI
             { this.dimS.Enabled = true; }
             { this.label89.Enabled = true; }
             { this.label90.Enabled = true; }
+            textBox1.Text = (int.Parse(levA.Text) + int.Parse(levB.Text) + int.Parse(levC.Text)
+                           + int.Parse(levD.Text) + int.Parse(levE.Text) + int.Parse(levF.Text)
+                           + int.Parse(levE.Text) + int.Parse(levG.Text) + int.Parse(levH.Text)).ToString();
         }
         // DimU validator
         private void label66_Click(object sender, EventArgs e)
@@ -2055,13 +2109,14 @@ namespace RevitFeederUI
         // DimX validator
         private void label62_Click(object sender, EventArgs e)
         {
-            int dimKValue = 0;
-            int dimHValue = 0;
-            int dimLValue = 0;
-            int dutyValue = 0;
-            int standbyValue = 0;
+            int dimKValue = int.Parse(dimK.Text);
+            int dimHValue = int.Parse(dimH.Text);
+            int dimLValue = int.Parse(dimL.Text);
+            int dutyValue = int.Parse(duty.Text);
+            int standbyValue = int.Parse(standby.Text);
+            int dimXValue;
 
-            if (int.TryParse(dimX.Text, out int dimXValue) && int.TryParse(dimK.Text, out dimKValue)
+            if (int.TryParse(dimK.Text, out dimKValue) && int.TryParse(dimX.Text, out dimXValue)
                 && int.TryParse(dimH.Text, out dimHValue) && int.TryParse(dimL.Text, out dimLValue)
                 && int.TryParse(duty.Text, out dutyValue) && int.TryParse(standby.Text, out standbyValue))
             {
@@ -2100,26 +2155,25 @@ namespace RevitFeederUI
         // DimY validator
         private void label60_Click(object sender, EventArgs e)
         {
-            // round((DimM + DimE + DimF + DimG + DimH / 2) / 10 mm) * 10 mm + 800 mm
-            double dimMValue = 0;
-            double dimEValue = 0;
-            double dimFValue = 0;
-            double dimGValue = 0;
-            double dimHValue = 0;
-            double dimKValue = 0;
-            double dimLValue = 0;
-            double dn4Value = 0;
-            double dimNValue = 0;
-            double dimOValue = 0;
-            double dimPValue = 0;
-            double dimQValue = 0;
-            double dimRValue = 0;
-            double dimUValue = 0;
-            double dimVValue = 0;
-            double dutyValue = 0;
-            double standbyValue = 0;
+            double dimMValue = int.Parse(dimM.Text);
+            double dimEValue = int.Parse(dimE.Text);
+            double dimFValue = int.Parse(dimF.Text);
+            double dimGValue = int.Parse(dimG.Text);
+            double dimHValue = int.Parse(dimH.Text);
+            double dimKValue = int.Parse(dimK.Text);
+            double dimLValue = int.Parse(dimL.Text);
+            double dn4Value = int.Parse(dn4.Text);
+            double dimNValue = int.Parse(dimN.Text);
+            double dimOValue = int.Parse(dimO.Text);
+            double dimPValue = int.Parse(dimP.Text);
+            double dimQValue = int.Parse(dimQ.Text);
+            double dimRValue = int.Parse(dimR.Text);
+            double dimUValue = int.Parse(dimU.Text);
+            double dimVValue = int.Parse(dimV.Text);
+            double dutyValue = int.Parse(duty.Text);
+            double standbyValue = int.Parse(standby.Text);
             double noPumps = dutyValue + standbyValue;
-            double dnInletValue = 0;
+            double dnInletValue = int.Parse(dnInlet.Text);
             int lowerBound = (int)Math.Ceiling(((dimMValue + dimEValue + dimFValue + dimGValue + dimHValue / 2) / 10) * 10 + 800 + Math.Max(dnInletValue * 2, 500) + 150);
             int upperBound = (int)Math.Ceiling(((dimMValue + dimEValue + dimFValue + dimGValue + dimHValue / 2) / 10) * 10 + 800 + Math.Max(dnInletValue * 2, 500) + 150 + 2000);
             if (int.TryParse(dimY.Text, out int dimYValue) && double.TryParse(dimM.Text, out dimMValue)
@@ -2177,6 +2231,26 @@ namespace RevitFeederUI
         }
 
         private void label45_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void dn3_SelectedIndexChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void dimW_TextChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void label58_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void label45_Click_1(object sender, EventArgs e)
         {
 
         }

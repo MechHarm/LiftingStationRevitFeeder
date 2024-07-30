@@ -33,7 +33,7 @@ namespace LiftingStationRevitFeeder.Domain
             //DimX = dimX ?? Civil Requirement > MinLSWallDistanceX
             //DimY = dimY ?? Civil Requirement > MinLSWallDistanceY
 
-            MeasurementRange = new String($"0 - {(PumpSelector.Flow.GetValue("m3 h-1") * 1.1):F0} CMH");
+            MeasurementRange = new String($"0 - {(PumpSelector.Flow.GetValue("m3 h-1") * 1.1):F0} m³/h");
         }
         public RevitFeed(
                             VolumetricFlow designPeakHourFlow,
@@ -89,6 +89,9 @@ namespace LiftingStationRevitFeeder.Domain
                             Length? dimW = default,
                             Length? minLSWallDistanceX = default,
                             Length? minLSWallDistanceY = default,
+                            Length? manholeX = default,
+                            Length? manholeY = default,
+                            Length? slopeStart = default,
                             string measurementRange = default
                         ) : this(designPeakHourFlow, head)
         {
@@ -104,7 +107,7 @@ namespace LiftingStationRevitFeeder.Domain
             //DimX = dimX ?? Civil Requirement > MinLSWallDistanceX
             //DimY = dimY ?? Civil Requirement > MinLSWallDistanceY
 
-            MeasurementRange = new String($"0 - {(PumpSelector.Flow.GetValue("m3 h-1") * 1.1):F0} CMH");
+            MeasurementRange = new String($"0 - {(PumpSelector.Flow.GetValue("m3 h-1") * 1.1):F0} m³/h");
         }
 
     }

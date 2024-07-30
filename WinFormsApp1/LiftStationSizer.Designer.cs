@@ -172,14 +172,14 @@
             label107 = new Label();
             standby = new TextBox();
             label111 = new Label();
-            textBox50 = new TextBox();
+            pumpInletVelocity = new TextBox();
             label109 = new Label();
             label112 = new Label();
             label113 = new Label();
-            textBox51 = new TextBox();
+            pressurePipeVelocity = new TextBox();
             label114 = new Label();
             label115 = new Label();
-            textBox52 = new TextBox();
+            gravityPipeVelocity = new TextBox();
             save = new Button();
             button2 = new Button();
             dn1 = new ComboBox();
@@ -191,6 +191,9 @@
             dnBreath = new ComboBox();
             dnBackflow = new ComboBox();
             dimB = new TextBox();
+            label45 = new Label();
+            label46 = new Label();
+            textBox1 = new TextBox();
             ((System.ComponentModel.ISupportInitialize)pictureBox1).BeginInit();
             SuspendLayout();
             // 
@@ -984,6 +987,7 @@
             dimW.Name = "dimW";
             dimW.Size = new Size(84, 31);
             dimW.TabIndex = 91;
+            dimW.TextChanged += dimW_TextChanged;
             // 
             // label57
             // 
@@ -1010,6 +1014,7 @@
             label58.Size = new Size(51, 20);
             label58.TabIndex = 89;
             label58.Text = "DimZ";
+            label58.Click += label58_Click;
             // 
             // dimZ
             // 
@@ -1857,14 +1862,14 @@
             label111.TabIndex = 180;
             label111.Text = "Pump inlet velocity";
             // 
-            // textBox50
+            // pumpInletVelocity
             // 
-            textBox50.Enabled = false;
-            textBox50.Location = new Point(1471, 561);
-            textBox50.Margin = new Padding(3, 4, 3, 4);
-            textBox50.Name = "textBox50";
-            textBox50.Size = new Size(35, 31);
-            textBox50.TabIndex = 179;
+            pumpInletVelocity.Enabled = false;
+            pumpInletVelocity.Location = new Point(1471, 561);
+            pumpInletVelocity.Margin = new Padding(3, 4, 3, 4);
+            pumpInletVelocity.Name = "pumpInletVelocity";
+            pumpInletVelocity.Size = new Size(35, 31);
+            pumpInletVelocity.TabIndex = 179;
             // 
             // label109
             // 
@@ -1903,14 +1908,14 @@
             label113.Text = "Pressure pipe velocity";
             label113.Click += label113_Click;
             // 
-            // textBox51
+            // pressurePipeVelocity
             // 
-            textBox51.Enabled = false;
-            textBox51.Location = new Point(1471, 601);
-            textBox51.Margin = new Padding(3, 4, 3, 4);
-            textBox51.Name = "textBox51";
-            textBox51.Size = new Size(35, 31);
-            textBox51.TabIndex = 182;
+            pressurePipeVelocity.Enabled = false;
+            pressurePipeVelocity.Location = new Point(1471, 601);
+            pressurePipeVelocity.Margin = new Padding(3, 4, 3, 4);
+            pressurePipeVelocity.Name = "pressurePipeVelocity";
+            pressurePipeVelocity.Size = new Size(35, 31);
+            pressurePipeVelocity.TabIndex = 182;
             // 
             // label114
             // 
@@ -1936,14 +1941,14 @@
             label115.TabIndex = 186;
             label115.Text = "Gravity pipe velocity";
             // 
-            // textBox52
+            // gravityPipeVelocity
             // 
-            textBox52.Enabled = false;
-            textBox52.Location = new Point(1471, 641);
-            textBox52.Margin = new Padding(3, 4, 3, 4);
-            textBox52.Name = "textBox52";
-            textBox52.Size = new Size(35, 31);
-            textBox52.TabIndex = 185;
+            gravityPipeVelocity.Enabled = false;
+            gravityPipeVelocity.Location = new Point(1471, 641);
+            gravityPipeVelocity.Margin = new Padding(3, 4, 3, 4);
+            gravityPipeVelocity.Name = "gravityPipeVelocity";
+            gravityPipeVelocity.Size = new Size(35, 31);
+            gravityPipeVelocity.TabIndex = 185;
             // 
             // save
             // 
@@ -2066,11 +2071,48 @@
             dimB.Size = new Size(84, 31);
             dimB.TabIndex = 200;
             // 
+            // label45
+            // 
+            label45.AutoSize = true;
+            label45.BackColor = SystemColors.Window;
+            label45.Enabled = false;
+            label45.Font = new Font("Microsoft Sans Serif", 8F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            label45.Location = new Point(1127, 645);
+            label45.Name = "label45";
+            label45.Size = new Size(23, 20);
+            label45.TabIndex = 203;
+            label45.Text = "m";
+            label45.Click += label45_Click_1;
+            // 
+            // label46
+            // 
+            label46.AutoSize = true;
+            label46.BackColor = SystemColors.Window;
+            label46.Enabled = false;
+            label46.Font = new Font("Microsoft Sans Serif", 8F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            label46.Location = new Point(924, 645);
+            label46.Name = "label46";
+            label46.Size = new Size(134, 20);
+            label46.TabIndex = 202;
+            label46.Text = "Wet Well Depth";
+            // 
+            // textBox1
+            // 
+            textBox1.Enabled = false;
+            textBox1.Location = new Point(1066, 641);
+            textBox1.Margin = new Padding(3, 4, 3, 4);
+            textBox1.Name = "textBox1";
+            textBox1.Size = new Size(54, 31);
+            textBox1.TabIndex = 201;
+            // 
             // LiftStationSizer
             // 
             AutoScaleDimensions = new SizeF(10F, 25F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(1638, 1312);
+            Controls.Add(label45);
+            Controls.Add(label46);
+            Controls.Add(textBox1);
             Controls.Add(dimB);
             Controls.Add(dnBackflow);
             Controls.Add(dnBreath);
@@ -2084,13 +2126,13 @@
             Controls.Add(save);
             Controls.Add(label114);
             Controls.Add(label115);
-            Controls.Add(textBox52);
+            Controls.Add(gravityPipeVelocity);
             Controls.Add(label112);
             Controls.Add(label113);
-            Controls.Add(textBox51);
+            Controls.Add(pressurePipeVelocity);
             Controls.Add(label109);
             Controls.Add(label111);
-            Controls.Add(textBox50);
+            Controls.Add(pumpInletVelocity);
             Controls.Add(label107);
             Controls.Add(standby);
             Controls.Add(label110);
@@ -2389,14 +2431,14 @@
         private System.Windows.Forms.Label label107;
         private System.Windows.Forms.TextBox standby;
         private System.Windows.Forms.Label label111;
-        private System.Windows.Forms.TextBox textBox50;
+        private System.Windows.Forms.TextBox pumpInletVelocity;
         private System.Windows.Forms.Label label109;
         private System.Windows.Forms.Label label112;
         private System.Windows.Forms.Label label113;
-        private System.Windows.Forms.TextBox textBox51;
+        private System.Windows.Forms.TextBox pressurePipeVelocity;
         private System.Windows.Forms.Label label114;
         private System.Windows.Forms.Label label115;
-        private System.Windows.Forms.TextBox textBox52;
+        private System.Windows.Forms.TextBox gravityPipeVelocity;
         private System.Windows.Forms.Button save;
         private System.Windows.Forms.Button button2;
         private System.Windows.Forms.ComboBox dn1;
@@ -2408,6 +2450,9 @@
         private System.Windows.Forms.ComboBox dnBreath;
         private System.Windows.Forms.ComboBox dnBackflow;
         private System.Windows.Forms.TextBox dimB;
+        private Label label45;
+        private Label label46;
+        private TextBox textBox1;
     }
 }
 

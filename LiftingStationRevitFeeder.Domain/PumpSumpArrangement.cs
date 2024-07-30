@@ -12,12 +12,13 @@ namespace LiftingStationRevitFeeder.Domain
         public Length? DimP { get; private set; }
         public Length? DimQ { get; private set; }
         public Length? DimR { get; private set; }
-
         public Length? DimU { get; private set; }
-
-
         public Length MinLSWallDistanceX { get; private set; }
         public Length MinLSWallDistanceY { get; private set; }
+        public Length? ManholeX { get; private set; }
+        public Length? ManholeY { get; private set; }
+        public Length? SlopeStart { get; private set; }
+
         protected PumpSumpArrangement(
             PumpSelector pumpSelector,
             Pipes pipes,
@@ -44,6 +45,9 @@ namespace LiftingStationRevitFeeder.Domain
             DimU = dimU ?? new Length(400, "mm");
             MinLSWallDistanceX = GetMinimumLSWallDistanceX(pumpSelector, pumpGeometry);
             MinLSWallDistanceY = GetMinimumLSWallDistanceY(pumpGeometry);
+            ManholeX = GetManholeX(pumpGeometry);
+            ManholeY = GetManholeY(pumpGeometry);
+            SlopeStart = MinLSWallDistanceY;
         }
         public static PumpSumpArrangement Create(
             PumpSelector pumpSelector,
@@ -69,11 +73,14 @@ namespace LiftingStationRevitFeeder.Domain
                                             : pipes.DN3.Value < 125 ? new Length(500 + Math.Ceiling(pipes.DN3.Value / 6) * 20, "mm")
                                             : new Length(500 + Math.Ceiling(pipes.DN3.Value / 7) * 20, "mm");
         private Length GetPumpDimensionR(Pipes pipes) =>
-            new Length(Math.Round((pipes.DN4.Value / 2 + 810)/5) * 5, "mm");
+            new Length(Math.Round((pipes.DN4.Value / 2 + 810) / 5) * 5, "mm");
         private Length GetMinimumLSWallDistanceX(PumpSelector pumpSelector, PumpGeometry pumpGeometry) =>
          new Length(2 * DimK.Value + pumpSelector.NumberOfPumps * pumpGeometry.DimH.Value + (pumpSelector.NumberOfPumps - 1) * DimL.Value, "mm");
         private Length GetMinimumLSWallDistanceY(PumpGeometry pumpGeometry) =>
             new Length((Math.Round((DimM.Value + pumpGeometry.DimE.Value + pumpGeometry.DimF.Value + pumpGeometry.DimG.Value + pumpGeometry.DimH.Value / 2) / 10) * 10) + 800, "mm");
-
+        private Length GetManholeX(PumpGeometry pumpGeometry) =>
+           new Length((Math.Round((pumpGeometry.DimE.Value + pumpGeometry.DimF.Value + pumpGeometry.DimH.Value + pumpGeometry.DimJ.Value) / 100) * 100) + 100, "mm");
+        private Length GetManholeY(PumpGeometry pumpGeometry) =>
+           new Length(Math.Round((pumpGeometry.DimH.Value / 100) * 100) + 200, "mm");
     }
 }

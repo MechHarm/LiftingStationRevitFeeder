@@ -14,8 +14,10 @@ namespace LiftingStationRevitFeeder.Domain
         public Velocity PumpInletVelocity { get; }
         public Velocity PressurizedPipeVelocity { get; }
         public Velocity GravityPipeVelocity { get; }
+        public Power InstalledPower { get; }
+        public Power PowerConsumption { get; }
 
-              
+
         protected PumpSelector(
             VolumetricFlow designPeakHourFlow, 
             Length head, 
@@ -34,6 +36,8 @@ namespace LiftingStationRevitFeeder.Domain
             PressurizedPipeVelocity=pressurizedPipeVelocity?? new Velocity(2, "m s-1");
             Flow = designPeakHourFlow / DutyPumpsCount;
             NumberOfPumps = DutyPumpsCount + StandbyPumpsCount;
+            InstalledPower = new Power(10, "kW");
+            PowerConsumption = new Power(8.5, "kW");
         }
         public static PumpSelector Create(
             VolumetricFlow designPeakHourFlow,
