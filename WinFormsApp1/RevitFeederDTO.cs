@@ -1,4 +1,5 @@
-﻿using System;
+﻿using MeasurementUnits.NET;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -58,13 +59,16 @@ namespace RevitFeederUI
         public Length DimW { get; }
         public Length DimZ { get; }
         public Length WetWellDepth { get; private set; }
+        public Length? ManholeX { get; private set; }
+        public Length? ManholeY { get; private set; }
+        public Length? SlopeStart { get; private set; }
 
 
         //public VolumetricFlow Flow { get; private set; }
         //public Velocity PumpInletVelocity { get; }
         //public Velocity PressurizedPipeVelocity { get; }
         //public Velocity GravityPipeVelocity { get; }
-        public RevitFeederDTO(VolumetricFlow designPeakHourFlow, Length head, VolumetricFlow dutyPumpsCount, VolumetricFlow standbyPumpsCount, VolumetricFlow numberOfPumps, Length dn1, Length dn2, Length dn3, Length dn4, Length dn5, Length dnInlet, Length dnBackflow, Length dnBreath, Length levA, Length levB, Length levC, Length levD, Length levE, Length levF, Length levG, Length levH, Length levI, Length dimA, Length dimB, Length dimC, Length dimD, Length dimE, Length dimF, Length dimG, Length dimH, Length dimI, Length dimJ, Length dimK, Length dimL, Length dimM, Length dimN, Length dimO, Length dimP, Length dimQ, Length dimR, Length dimS, Length dimT, Length dimU, Length dimV, Length dimX, Length dimY, Length dimW, Length dimZ, Length wetWellDepth) // VolumetricFlow flow)
+        public RevitFeederDTO(VolumetricFlow designPeakHourFlow, Length head, VolumetricFlow dutyPumpsCount, VolumetricFlow standbyPumpsCount, VolumetricFlow numberOfPumps, Length dn1, Length dn2, Length dn3, Length dn4, Length dn5, Length dnInlet, Length dnBackflow, Length dnBreath, Length levA, Length levB, Length levC, Length levD, Length levE, Length levF, Length levG, Length levH, Length levI, Length dimA, Length dimB, Length dimC, Length dimD, Length dimE, Length dimF, Length dimG, Length dimH, Length dimI, Length dimJ, Length dimK, Length dimL, Length dimM, Length dimN, Length dimO, Length dimP, Length dimQ, Length dimR, Length dimS, Length dimT, Length dimU, Length dimV, Length dimX, Length dimY, Length dimW, Length dimZ, Length wetWellDepth, Length manholeX, Length manholeY, Length slopeStart) // VolumetricFlow flow)
         {
             DesignPeakHourFlow = designPeakHourFlow;
             Head = head;
@@ -115,6 +119,9 @@ namespace RevitFeederUI
             DimY = dimY;
             DimZ = dimZ;
             WetWellDepth = wetWellDepth;
+            ManholeX = manholeX;
+            ManholeY = manholeY;
+            SlopeStart = slopeStart;
             // Flow = flow;
         }
         public RevitFeederDTO()

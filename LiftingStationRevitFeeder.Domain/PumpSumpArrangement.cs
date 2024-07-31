@@ -78,9 +78,9 @@ namespace LiftingStationRevitFeeder.Domain
          new Length(2 * DimK.Value + pumpSelector.NumberOfPumps * pumpGeometry.DimH.Value + (pumpSelector.NumberOfPumps - 1) * DimL.Value, "mm");
         private Length GetMinimumLSWallDistanceY(PumpGeometry pumpGeometry) =>
             new Length((Math.Round((DimM.Value + pumpGeometry.DimE.Value + pumpGeometry.DimF.Value + pumpGeometry.DimG.Value + pumpGeometry.DimH.Value / 2) / 10) * 10) + 800, "mm");
-        private Length GetManholeX(PumpGeometry pumpGeometry) =>
-           new Length((Math.Round((pumpGeometry.DimE.Value + pumpGeometry.DimF.Value + pumpGeometry.DimH.Value + pumpGeometry.DimJ.Value) / 100) * 100) + 100, "mm");
         private Length GetManholeY(PumpGeometry pumpGeometry) =>
+           new Length((Math.Round((pumpGeometry.DimE.Value + pumpGeometry.DimF.Value + pumpGeometry.DimH.Value + pumpGeometry.DimJ.Value) / 100) * 100) + 100, "mm");
+        private Length GetManholeX(PumpGeometry pumpGeometry) =>
            new Length(Math.Round((pumpGeometry.DimH.Value / 100) * 100) + 200, "mm");
     }
 }

@@ -16,6 +16,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using static System.Windows.Forms.VisualStyles.VisualStyleElement;
+using MeasurementUnits.NET;
 //using LiftingStationRevitFeeder.Domain;
 
 namespace RevitFeederUI
@@ -1387,9 +1388,12 @@ namespace RevitFeederUI
             var dimW = new Length(Convert.ToInt32(this.dimW.Text));
             var dimZ = new Length(Convert.ToInt32(this.dimZ.Text));
             var wetWellDepth = new Length(levA.Value + levB.Value + levC.Value + levD.Value + levE.Value + levF.Value + levG.Value + levH.Value + levI.Value);
+            var manholeX = new Length((Math.Round((dimE.Value + dimF.Value + dimH.Value + dimJ.Value) / 100) * 100) + 100);
+            var manholeY = new Length(Math.Round((dimH.Value / 100) * 100) + 200);
+            var slopeStart = new Length((Math.Round((dimM.Value + dimE.Value + dimF.Value + dimG.Value + dimH.Value / 2) / 10) * 10) + 200);
 
-            var revitFeed = new RevitFeederDTO(designPeakHourFlow, head, dutyPumpsCount, standbyPumpsCount, numberOfPumps, dn1, dn2, dn3, dn4, dn5, dnInlet, dnBackflow, dnBreath, levA, levB, levC, levD, levE, levF, levG, levH, levI, dimA, dimB, dimC, dimD, dimE, dimF, dimG, dimH, dimI, dimJ, dimK, dimL, dimM, dimN, dimO, dimP, dimQ, dimR, dimS, dimT, dimU, dimV, dimX, dimY, dimW, dimZ, wetWellDepth);
-            WriteToJsonFile<RevitFeederDTO>($"C:\\RevitTest\\AdvancedInput-Flow{designPeakHourFlow.Value}-Head{head.Value}.json", revitFeed);
+            var revitFeed = new RevitFeederDTO(designPeakHourFlow, head, dutyPumpsCount, standbyPumpsCount, numberOfPumps, dn1, dn2, dn3, dn4, dn5, dnInlet, dnBackflow, dnBreath, levA, levB, levC, levD, levE, levF, levG, levH, levI, dimA, dimB, dimC, dimD, dimE, dimF, dimG, dimH, dimI, dimJ, dimK, dimL, dimM, dimN, dimO, dimP, dimQ, dimR, dimS, dimT, dimU, dimV, dimX, dimY, dimW, dimZ, wetWellDepth, manholeX, manholeY, slopeStart);
+            WriteToJsonFile<RevitFeederDTO>($"C:\\RevitTest\\AdvancedInput-Flow{designPeakHourFlow.Value}-D{dutyPumpsCount}-S{standbyPumpsCount}-DN{dn1.Value}.json", revitFeed);
             MessageBox.Show($"Saved to" +
                         $"\nC:\\RevitTest\\AdvancedInput-Flow{designPeakHourFlow.Value}-D{dutyPumpsCount}-S{standbyPumpsCount}-DN{dn1.Value}.json");
         }

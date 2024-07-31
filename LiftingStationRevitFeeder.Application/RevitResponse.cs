@@ -68,6 +68,9 @@ namespace LiftingStationRevitFeeder.Application
         public ResponseData DimQ { get; private set; }
         public ResponseData DimR { get; private set; }
         public ResponseData DimU { get; private set; }
+        public ResponseData ManholeX { get; private set; }
+        public ResponseData ManholeY { get; private set; }
+        public ResponseData SlopeStart { get; private set; }
 
 
         public RevitResponse()
@@ -124,6 +127,9 @@ namespace LiftingStationRevitFeeder.Application
             DimQ = Mapper.MapFromMeasurementUnit("DimQ", revitFeed.PumpSumpArrangement.DimQ);
             DimR = Mapper.MapFromMeasurementUnit("DimR", revitFeed.PumpSumpArrangement.DimR);
             DimU = Mapper.MapFromMeasurementUnit("DimU", revitFeed.PumpSumpArrangement.DimU);
+            ManholeX = Mapper.MapFromMeasurementUnit("ManholeX", revitFeed.PumpSumpArrangement.ManholeX);
+            ManholeY = Mapper.MapFromMeasurementUnit("ManholeY", revitFeed.PumpSumpArrangement.ManholeY);
+            SlopeStart = Mapper.MapFromMeasurementUnit("SlopeStart", revitFeed.PumpSumpArrangement.SlopeStart);
 
             //Pipes
             DN1 = Mapper.MapFromMeasurementUnit("DN1", revitFeed.Pipes.DN1);
