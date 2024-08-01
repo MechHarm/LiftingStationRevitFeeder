@@ -1775,9 +1775,10 @@ namespace RevitFeederUI
         private void label40_Click(object sender, EventArgs e)
         {
             int levAValue = int.Parse(levA.Text);
-            int levBValue = int.Parse(levB.Text);
             int lowerBound = 500 - levAValue;
             int upperBound = 5000;
+            int levBValue = Math.Max(int.Parse(levB.Text), lowerBound);
+            
             if (int.TryParse(levA.Text, out levAValue) && int.TryParse(levB.Text, out levBValue))
             {
                 if (levAValue + levBValue < 500)
