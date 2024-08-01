@@ -1070,8 +1070,9 @@ namespace RevitFeederUI
                 string selectedValue = dn4.SelectedItem.ToString();
                 int selectedIndex = dn4.SelectedIndex;
                 string smallestItemAvailable = dn4.Items[Math.Max(1, selectedIndex - 2)].ToString();
+                string secondSmallestItemAvailable = dn4.Items[Math.Max(1, selectedIndex - 1)].ToString();
                 int lowerBound = Convert.ToInt32(smallestItemAvailable);
-                int upperBound = dn4Value;
+                int upperBound = Convert.ToInt32(secondSmallestItemAvailable);
 
                 if (dn5Value < lowerBound)
                 {
@@ -1092,8 +1093,9 @@ namespace RevitFeederUI
                 string selectedValue = dn4.SelectedItem.ToString();
                 int selectedIndex = dn4.SelectedIndex;
                 string smallestItemAvailable = dn4.Items[Math.Max(1, selectedIndex - 2)].ToString();
+                string secondSmallestItemAvailable = dn4.Items[Math.Max(1, selectedIndex - 1)].ToString();
                 int lowerBound = Convert.ToInt32(smallestItemAvailable);
-                int upperBound = dn4Value;
+                int upperBound = Convert.ToInt32(secondSmallestItemAvailable);
                 dn5.Text = lowerBound.ToString();
                 MessageBox.Show($"Feed me with integer between between {lowerBound} m and {upperBound} m." +
                         $"\nValue modified to lower limit!");

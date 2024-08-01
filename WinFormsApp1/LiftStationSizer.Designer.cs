@@ -2109,6 +2109,7 @@
             // 
             AutoScaleDimensions = new SizeF(10F, 25F);
             AutoScaleMode = AutoScaleMode.Font;
+            AutoSize = true;
             ClientSize = new Size(1638, 1312);
             Controls.Add(label45);
             Controls.Add(label46);
@@ -2278,7 +2279,6 @@
             FormBorderStyle = FormBorderStyle.Fixed3D;
             Icon = (Icon)resources.GetObject("$this.Icon");
             Margin = new Padding(3, 4, 3, 4);
-            MaximizeBox = false;
             Name = "LiftStationSizer";
             Text = "Lifting Station Sizer";
             ((System.ComponentModel.ISupportInitialize)pictureBox1).EndInit();
