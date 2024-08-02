@@ -15,9 +15,13 @@ namespace LiftingStationRevitFeeder.Domain
         public Length? DimU { get; private set; }
         public Length MinLSWallDistanceX { get; private set; }
         public Length MinLSWallDistanceY { get; private set; }
-        public Length? ManholeX { get; private set; }
-        public Length? ManholeY { get; private set; }
-        public Length? SlopeStart { get; private set; }
+        public Length? CivL { get; private set; }
+        public Length? CivM { get; private set; }
+        public Length? CivI { get; private set; }
+        public Length? CivN { get; private set; }
+        public Length? CivO { get; private set; }
+        public Length? CivP { get; private set; }
+        public Length? CivQ { get; private set; }
 
         protected PumpSumpArrangement(
             PumpSelector pumpSelector,
@@ -31,7 +35,14 @@ namespace LiftingStationRevitFeeder.Domain
             Length? dimP = default,
             Length? dimQ = default,
             Length? dimR = default,
-            Length? dimU = default
+            Length? dimU = default,
+            Length? civL = default,
+            Length? civM = default,
+            Length? civI = default,
+            Length? civN = default,
+            Length? civO = default,
+            Length? civP = default,
+            Length? civQ = default
             )
         {
             DimK = dimK ?? new Length(800, "mm");
@@ -45,9 +56,13 @@ namespace LiftingStationRevitFeeder.Domain
             DimU = dimU ?? new Length(400, "mm");
             MinLSWallDistanceX = GetMinimumLSWallDistanceX(pumpSelector, pumpGeometry);
             MinLSWallDistanceY = GetMinimumLSWallDistanceY(pumpGeometry);
-            ManholeX = GetManholeX(pumpGeometry);
-            ManholeY = GetManholeY(pumpGeometry);
-            SlopeStart = MinLSWallDistanceY;
+            CivL = GetManholeX(pumpGeometry);
+            CivM = GetManholeY(pumpGeometry);
+            CivI = MinLSWallDistanceY;
+            CivN = GetManholePosition(pumpGeometry);
+            CivO = GetValveManholeX(pipes);
+            CivP = GetValveManholeY();
+            CivQ = GetValveManholePosition();
         }
         public static PumpSumpArrangement Create(
             PumpSelector pumpSelector,
@@ -61,10 +76,17 @@ namespace LiftingStationRevitFeeder.Domain
             Length? dimP = default,
             Length? dimQ = default,
             Length? dimR = default,
-            Length? dumU = default)
+            Length? dimU = default,
+            Length? civL = default,
+            Length? civM = default,
+            Length? civI = default,
+            Length? civN = default,
+            Length? civO = default,
+            Length? civP = default,
+            Length? civQ = default)
         {
             return new PumpSumpArrangement(
-             pumpSelector, pipes, pumpGeometry, dimK, dimL, dimM, dimN, dimO, dimP, dimQ, dimR, dumU);
+             pumpSelector, pipes, pumpGeometry, dimK, dimL, dimM, dimN, dimO, dimP, dimQ, dimR, dimU, civL, civM, civI, civN, civQ);
         }
         private Length GetPumpDimensionO(Pipes pipes) => pipes.DN3.Value < 80 ? new Length(500 + Math.Ceiling(pipes.DN3.Value / 4) * 10, "mm")
                                           : pipes.DN3.Value < 125 ? new Length(500 + Math.Ceiling(pipes.DN3.Value / 6) * 10, "mm")
@@ -82,5 +104,13 @@ namespace LiftingStationRevitFeeder.Domain
            new Length((Math.Round((pumpGeometry.DimE.Value + pumpGeometry.DimF.Value + pumpGeometry.DimH.Value + pumpGeometry.DimJ.Value) / 100) * 100) + 100, "mm");
         private Length GetManholeX(PumpGeometry pumpGeometry) =>
            new Length(Math.Round((pumpGeometry.DimH.Value / 100) * 100) + 200, "mm");
+        private Length GetManholePosition(PumpGeometry pumpGeometry) =>
+           new Length(DimM.Value + pumpGeometry.DimG.Value - pumpGeometry.DimJ.Value, "mm");
+        private Length GetValveManholePosition() =>
+           new Length(DimO.Value / 2, "mm");
+        private Length GetValveManholeY() =>
+           new Length(DimO.Value / 2 + DimP.Value + DimQ.Value / 2, "mm");
+        private Length GetValveManholeX(Pipes pipes) =>
+           new Length(Math.Max(400, pipes.DN1.Value / 2), "mm");
     }
 }

@@ -68,9 +68,14 @@ namespace LiftingStationRevitFeeder.Application
         public ResponseData DimQ { get; private set; }
         public ResponseData DimR { get; private set; }
         public ResponseData DimU { get; private set; }
-        public ResponseData ManholeX { get; private set; }
-        public ResponseData ManholeY { get; private set; }
-        public ResponseData SlopeStart { get; private set; }
+        public ResponseData CivL { get; private set; }
+        public ResponseData CivM { get; private set; }
+        public ResponseData CivI { get; private set; }
+        public ResponseData CivN { get; private set; }
+        public ResponseData CivO { get; private set; }
+        public ResponseData CivP { get; private set; }
+        public ResponseData CivQ { get; private set; }
+
 
 
         public RevitResponse()
@@ -127,9 +132,13 @@ namespace LiftingStationRevitFeeder.Application
             DimQ = Mapper.MapFromMeasurementUnit("DimQ", revitFeed.PumpSumpArrangement.DimQ);
             DimR = Mapper.MapFromMeasurementUnit("DimR", revitFeed.PumpSumpArrangement.DimR);
             DimU = Mapper.MapFromMeasurementUnit("DimU", revitFeed.PumpSumpArrangement.DimU);
-            ManholeX = Mapper.MapFromMeasurementUnit("ManholeX", revitFeed.PumpSumpArrangement.ManholeX);
-            ManholeY = Mapper.MapFromMeasurementUnit("ManholeY", revitFeed.PumpSumpArrangement.ManholeY);
-            SlopeStart = Mapper.MapFromMeasurementUnit("SlopeStart", revitFeed.PumpSumpArrangement.SlopeStart);
+            CivL = Mapper.MapFromMeasurementUnit("CivL", revitFeed.PumpSumpArrangement.CivL);
+            CivM = Mapper.MapFromMeasurementUnit("CivM", revitFeed.PumpSumpArrangement.CivM);
+            CivI = Mapper.MapFromMeasurementUnit("CivI", revitFeed.PumpSumpArrangement.CivI);
+            CivN = Mapper.MapFromMeasurementUnit("CivN", revitFeed.PumpSumpArrangement.CivN);
+            CivO = Mapper.MapFromMeasurementUnit("CivO", revitFeed.PumpSumpArrangement.CivO);
+            CivP = Mapper.MapFromMeasurementUnit("CivP", revitFeed.PumpSumpArrangement.CivP);
+            CivQ = Mapper.MapFromMeasurementUnit("CivQ", revitFeed.PumpSumpArrangement.CivQ);
 
             //Pipes
             DN1 = Mapper.MapFromMeasurementUnit("DN1", revitFeed.Pipes.DN1);
