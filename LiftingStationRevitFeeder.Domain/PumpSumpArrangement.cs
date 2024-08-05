@@ -103,7 +103,7 @@ namespace LiftingStationRevitFeeder.Domain
         private Length GetManholeY(PumpGeometry pumpGeometry) =>
            new Length((Math.Round((pumpGeometry.DimE.Value + pumpGeometry.DimF.Value + pumpGeometry.DimH.Value + pumpGeometry.DimJ.Value) / 100) * 100) + 100, "mm");
         private Length GetManholeX(PumpGeometry pumpGeometry) =>
-           new Length(Math.Round((pumpGeometry.DimH.Value / 100) * 100) + 200, "mm");
+           new Length(Math.Round(((2*pumpGeometry.DimI.Value) / 100) * 100) + 200, "mm");
         private Length GetManholePosition(PumpGeometry pumpGeometry) =>
            new Length(DimM.Value + pumpGeometry.DimG.Value - pumpGeometry.DimJ.Value, "mm");
         private Length GetValveManholePosition() =>

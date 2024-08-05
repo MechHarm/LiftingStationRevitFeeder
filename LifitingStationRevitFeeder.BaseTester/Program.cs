@@ -2,11 +2,11 @@
 using LiftingStationRevitFeeder.Application;
 using LiftingStationRevitFeeder.Domain;
 using MeasurementUnits.NET;
-const int numberOfStepsInFlow = 2;
+const int numberOfStepsInFlow = 20;
 const int numberOfStepsInHead = 2;
 
-var flowMin = 10d;
-var flowMax = 20d;
+var flowMin = 20d;
+var flowMax = 1000d;
 var headMin = 1d;
 var headMax = 5d;
 

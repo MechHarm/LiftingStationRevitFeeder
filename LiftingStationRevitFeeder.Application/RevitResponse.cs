@@ -11,6 +11,7 @@ namespace LiftingStationRevitFeeder.Application
     public class RevitResponse
     {
         //BaseData
+        public ResponseData MeasurementSystem { get; }
         public ResponseData DesignPeakHourFlow { get; }
         public ResponseData Head { get; }
 
@@ -22,6 +23,9 @@ namespace LiftingStationRevitFeeder.Application
         public ResponseData PumpInletVelocity { get; }
         public ResponseData PressurizedPipeVelocity { get; }
         public ResponseData GravityPipeVelocity { get; }
+        public ResponseData InstalledPower { get; }
+        public ResponseData PowerConsumption { get; }
+
         //Pipes
         public ResponseData DN1 { get; private set; }
         public ResponseData DN2 { get; private set; }
@@ -94,11 +98,13 @@ namespace LiftingStationRevitFeeder.Application
             PumpInletVelocity = Mapper.MapFromMeasurementUnit("PumpInletVelocity", revitFeed.PumpSelector.PumpInletVelocity);
             PressurizedPipeVelocity = Mapper.MapFromMeasurementUnit("PressurizedPipeVelocity", revitFeed.PumpSelector.PressurizedPipeVelocity);
             GravityPipeVelocity = Mapper.MapFromMeasurementUnit("GravityPipeVelocity", revitFeed.PumpSelector.GravityPipeVelocity);
+            InstalledPower = Mapper.MapFromMeasurementUnit("InstalledPower", revitFeed.PumpSelector.InstalledPower);
+            PowerConsumption = Mapper.MapFromMeasurementUnit("PowerConsumption", revitFeed.PumpSelector.PowerConsumption);
 
             // PumpGeometry
             DimA = Mapper.MapFromMeasurementUnit("DimA", revitFeed.PumpGeometry.DimA);
             DimB = Mapper.MapFromMeasurementUnit("DimB", revitFeed.PumpGeometry.DimB);
-            DimC = Mapper.MapFromMeasurementUnit("DimC",revitFeed.PumpGeometry.DimC);
+            DimC = Mapper.MapFromMeasurementUnit("DimC", revitFeed.PumpGeometry.DimC);
             DimD = Mapper.MapFromMeasurementUnit("DimD", revitFeed.PumpGeometry.DimD);
             DimE = Mapper.MapFromMeasurementUnit("DimE", revitFeed.PumpGeometry.DimE);
             DimF = Mapper.MapFromMeasurementUnit("DimF", revitFeed.PumpGeometry.DimF);

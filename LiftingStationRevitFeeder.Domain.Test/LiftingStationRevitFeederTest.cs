@@ -61,10 +61,11 @@ namespace LiftingStationRevitFeeder.Domain.Test
         {
             // arrange
             var designPeakHourFlow = new VolumetricFlow(100, "m3 h-1");
+            var flow = new VolumetricFlow(100, "m3 h-1");
             var head = new Length(5, "m");
 
             // act
-            var sut = new RevitFeed(designPeakHourFlow, head, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null);
+            var sut = new RevitFeed(designPeakHourFlow, flow, head, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null);
 
             // assert
             sut.Should().NotBeNull();
