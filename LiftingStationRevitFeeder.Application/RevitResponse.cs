@@ -72,6 +72,9 @@ namespace LiftingStationRevitFeeder.Application
         public ResponseData DimQ { get; private set; }
         public ResponseData DimR { get; private set; }
         public ResponseData DimU { get; private set; }
+
+        public ResponseData DimX { get; private set; }
+        public ResponseData DimY { get; private set; }
         public ResponseData CivL { get; private set; }
         public ResponseData CivM { get; private set; }
         public ResponseData CivI { get; private set; }
@@ -79,6 +82,15 @@ namespace LiftingStationRevitFeeder.Application
         public ResponseData CivO { get; private set; }
         public ResponseData CivP { get; private set; }
         public ResponseData CivQ { get; private set; }
+        public ResponseData CivF { get; private set; }
+        public ResponseData CivH { get; private set; }
+        public ResponseData CivG { get; private set; }
+        public ResponseData CivJ { get; private set; }
+        public ResponseData CivK { get; private set; }
+        public ResponseData CivS { get; private set; }
+        public ResponseData CivR { get; private set; }
+        public ResponseData CivT { get; private set; }
+        public ResponseData InletLocation { get; private set; }
 
 
 
@@ -138,6 +150,8 @@ namespace LiftingStationRevitFeeder.Application
             DimQ = Mapper.MapFromMeasurementUnit("DimQ", revitFeed.PumpSumpArrangement.DimQ);
             DimR = Mapper.MapFromMeasurementUnit("DimR", revitFeed.PumpSumpArrangement.DimR);
             DimU = Mapper.MapFromMeasurementUnit("DimU", revitFeed.PumpSumpArrangement.DimU);
+            DimX = Mapper.MapFromMeasurementUnit("DimX", revitFeed.PumpSumpArrangement.DimX);
+            DimY = Mapper.MapFromMeasurementUnit("DimY", revitFeed.PumpSumpArrangement.DimY);
             CivL = Mapper.MapFromMeasurementUnit("CivL", revitFeed.PumpSumpArrangement.CivL);
             CivM = Mapper.MapFromMeasurementUnit("CivM", revitFeed.PumpSumpArrangement.CivM);
             CivI = Mapper.MapFromMeasurementUnit("CivI", revitFeed.PumpSumpArrangement.CivI);
@@ -145,8 +159,17 @@ namespace LiftingStationRevitFeeder.Application
             CivO = Mapper.MapFromMeasurementUnit("CivO", revitFeed.PumpSumpArrangement.CivO);
             CivP = Mapper.MapFromMeasurementUnit("CivP", revitFeed.PumpSumpArrangement.CivP);
             CivQ = Mapper.MapFromMeasurementUnit("CivQ", revitFeed.PumpSumpArrangement.CivQ);
+            CivF = Mapper.MapFromMeasurementUnit("CivF", revitFeed.PumpSumpArrangement.CivF);
+            CivH = Mapper.MapFromMeasurementUnit("CivH", revitFeed.PumpSumpArrangement.CivH);
+            CivG = Mapper.MapFromMeasurementUnit("CivG", revitFeed.PumpSumpArrangement.CivG);
+            CivJ = Mapper.MapFromMeasurementUnit("CivJ", revitFeed.PumpSumpArrangement.CivJ);
+            CivK = Mapper.MapFromMeasurementUnit("CivK", revitFeed.PumpSumpArrangement.CivK);
+            CivS = Mapper.MapFromMeasurementUnit("CivS", revitFeed.PumpSumpArrangement.CivS);
+            CivR = Mapper.MapFromMeasurementUnit("CivR", revitFeed.PumpSumpArrangement.CivR);
+            CivT = Mapper.MapFromMeasurementUnit("CivT", revitFeed.PumpSumpArrangement.CivT);
+            InletLocation = Mapper.MapFromMeasurementUnit("InletLocation", revitFeed.PumpSumpArrangement.InletLocation);
 
-            //Pipes
+        //Pipes
             DN1 = Mapper.MapFromMeasurementUnit("DN1", revitFeed.Pipes.DN1);
             DN2 = Mapper.MapFromMeasurementUnit("DN2", revitFeed.Pipes.DN2);
             DN3 = Mapper.MapFromMeasurementUnit("DN3", revitFeed.Pipes.DN3);

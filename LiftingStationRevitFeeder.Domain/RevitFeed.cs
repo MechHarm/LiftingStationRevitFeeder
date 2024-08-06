@@ -28,15 +28,13 @@ namespace LiftingStationRevitFeeder.Domain
             Pipes = Pipes.Create(PumpSelector);
             PumpGeometry = PumpGeometry.Create(Pipes);
             Levels = Levels.Create(Pipes);
-            PumpSumpArrangement = PumpSumpArrangement.Create(PumpSelector, Pipes, PumpGeometry);
             PumpSumpGeometry = PumpSumpGeometry.Create();
+            PumpSumpArrangement = PumpSumpArrangement.Create(PumpSelector, Pipes, PumpGeometry, PumpSumpGeometry, Levels);
             ValvePitGeometry = ValvePitGeometry.Create(PumpSelector, Pipes, PumpGeometry, PumpSumpArrangement);
-            //DimX = dimX ?? Civil Requirement > MinLSWallDistanceX
-            //DimY = dimY ?? Civil Requirement > MinLSWallDistanceY
             MeasurementSystem = new String("Metric");
             MeasurementRange = new String($"0 - {(PumpSelector.Flow.GetValue("m3 h-1") * 1.1):F0} CMH");
         }
-        public RevitFeed(                
+        public RevitFeed(
                             VolumetricFlow designPeakHourFlow,
                             VolumetricFlow flow,
                             Length head,
@@ -93,8 +91,6 @@ namespace LiftingStationRevitFeeder.Domain
                             Length? dimY = default,
                             Length? dimZ = default,
                             Length? dimW = default,
-                            Length? minLSWallDistanceX = default,
-                            Length? minLSWallDistanceY = default,
                             Length? civL = default,
                             Length? civM = default,
                             Length? civI = default,
@@ -102,6 +98,15 @@ namespace LiftingStationRevitFeeder.Domain
                             Length? civO = default,
                             Length? civP = default,
                             Length? civQ = default,
+                            Length? civF = default,
+                            Length? civH = default,
+                            Length? civG = default,
+                            Length? civJ = default,
+                            Length? civK = default,
+                            Length? civS = default,
+                            Length? civR = default,
+                            Length? civT = default,
+                            Length? inletLocation = default,
                             string measurementRange = default
                         ) : this(designPeakHourFlow, head)
         {
@@ -110,13 +115,10 @@ namespace LiftingStationRevitFeeder.Domain
             Pipes = Pipes.Create(PumpSelector, dn1, dn2, dn3, dn4, dn5, dnBreath, dnInlet, dnBackflow);
             PumpGeometry = PumpGeometry.Create(Pipes, dimA, dimB, dimC, dimD, dimE, dimF, dimG, dimH, dimI, dimJ);
             Levels = Levels.Create(Pipes, dimS, dimT);
-            PumpSumpArrangement = PumpSumpArrangement.Create(PumpSelector, Pipes, PumpGeometry, dimK, dimL, dimM, dimN, dimO, dimP, dimQ, dimR, dimU, civL, civM, civI, civN, civO, civP, civQ);
+            PumpSumpArrangement = PumpSumpArrangement.Create(PumpSelector, Pipes, PumpGeometry, PumpSumpGeometry, Levels, dimK, dimL, dimM, dimN, dimO, dimP, dimQ, dimR, dimU, dimX, dimY, civL, civM, civI, civN, civO, civP, civQ, civF, civH, civG, civJ, civK, civS, civR, civT, inletLocation);
             PumpSumpGeometry = PumpSumpGeometry.Create();
             ValvePitGeometry = ValvePitGeometry.Create(PumpSelector, Pipes, PumpGeometry, PumpSumpArrangement, dimV, dimZ, dimW);
-
-            //DimX = dimX ?? Civil Requirement > MinLSWallDistanceX
-            //DimY = dimY ?? Civil Requirement > MinLSWallDistanceY
-            MeasurementSystem = new String("Metric"); 
+            MeasurementSystem = new String("Metric");
             MeasurementRange = new String($"0 - {(PumpSelector.Flow.GetValue("m3 h-1") * 1.1):F0} CMH");
         }
 
