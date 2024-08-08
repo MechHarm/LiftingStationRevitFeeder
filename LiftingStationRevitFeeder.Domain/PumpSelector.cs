@@ -31,7 +31,7 @@ namespace LiftingStationRevitFeeder.Domain
             Power powerConsumption = default,
             string measurementSystem = default)
         {
-            MeasurementSystem = new string("Metric");
+            MeasurementSystem = measurementSystem;
             DesignPeakHourFlow = designPeakHourFlow;
             Head = head;
             DutyPumpsCount = dutyPumpsCount;
@@ -54,8 +54,8 @@ namespace LiftingStationRevitFeeder.Domain
             Velocity? pressurizedPipeVelocity = null,
             VolumetricFlow? flow = null,
             Power? installedPower = null,
-            Power? powerConsumption= null,
-            string measurementSystem = "Metric")
+            Power? powerConsumption = null,
+            string? measurementSystem = null)
         {
             var result = new PumpSelector(
             designPeakHourFlow,

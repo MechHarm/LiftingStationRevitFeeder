@@ -12,9 +12,9 @@ namespace LiftingStationRevitFeeder.Domain.Test
             // arrange
             var designPeakHourFlow = new VolumetricFlow(250, "m3 h-1");
             var head = new Length(5, "m");
-
+            var measurementSystem = new String("Metric");
             // act
-            var sut = RevitFeed.CreateBase(designPeakHourFlow, head);
+            var sut = RevitFeed.CreateBase(designPeakHourFlow, head, measurementSystem);
 
             // assert
             sut.Should().NotBeNull();

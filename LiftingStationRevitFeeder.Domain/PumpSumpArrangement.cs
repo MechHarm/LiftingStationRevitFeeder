@@ -147,17 +147,17 @@ namespace LiftingStationRevitFeeder.Domain
         private Length GetMinimumLSWallDistanceY(PumpGeometry pumpGeometry) =>
             new Length((Math.Round((DimM.Value + pumpGeometry.DimE.Value + pumpGeometry.DimF.Value + pumpGeometry.DimG.Value + pumpGeometry.DimH.Value / 2) / 10) * 10) + Math.Max(200 + CivF.Value, 800), "mm");
         private Length GetManholeY(PumpGeometry pumpGeometry) =>
-           new Length((Math.Round((pumpGeometry.DimE.Value + pumpGeometry.DimF.Value + pumpGeometry.DimH.Value + pumpGeometry.DimJ.Value) / 100) * 100) + 100, "mm");
+           new Length((Math.Round((pumpGeometry.DimE.Value + pumpGeometry.DimF.Value + pumpGeometry.DimH.Value / 2 + pumpGeometry.DimJ.Value) / 100) * 100) + 100, "mm");
         private Length GetManholeX(PumpGeometry pumpGeometry) =>
            new Length(Math.Round(((2 * pumpGeometry.DimI.Value) / 100) * 100) + 200, "mm");
         private Length GetManholePosition(PumpGeometry pumpGeometry) =>
            new Length(DimM.Value + pumpGeometry.DimG.Value - pumpGeometry.DimJ.Value, "mm");
         private Length GetValveManholePosition() =>
-           new Length(DimO.Value / 2, "mm");
+           new Length(DimO.Value / 2 - 50, "mm");
         private Length GetValveManholeY() =>
-           new Length(DimO.Value / 2 + DimP.Value + DimQ.Value / 2, "mm");
+           new Length(DimO.Value / 2 + DimP.Value + DimQ.Value / 2 + 100, "mm");
         private Length GetValveManholeX(Pipes pipes) =>
-           new Length(Math.Max(400, pipes.DN1.Value / 2), "mm");
+           new Length(Math.Max(400, pipes.DN3.Value * 3), "mm");
         private Length GetSlopeStart(PumpGeometry pumpGeometry) =>
            new Length((Math.Round((DimM.Value + pumpGeometry.DimE.Value + pumpGeometry.DimF.Value + pumpGeometry.DimG.Value + pumpGeometry.DimH.Value / 2) / 10) * 10) + 200, "mm");
         private Length GetInletPosition() =>

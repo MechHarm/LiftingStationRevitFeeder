@@ -17,21 +17,21 @@ namespace LiftingStationRevitFeeder.Domain
         public string MeasurementSystem { get; private set; }
 
 
-        public static RevitFeed CreateBase(VolumetricFlow designPeakHourFlow, Length head)
+        public static RevitFeed CreateBase(VolumetricFlow designPeakHourFlow, Length head, String measurementSystem)
         {
-            var pumpSelection = PumpSelector.Create(designPeakHourFlow, head);
-            return new RevitFeed(designPeakHourFlow, head);
+            var pumpSelection = PumpSelector.Create(designPeakHourFlow, head, null, null, null, null, null, null, null, null, measurementSystem);
+            return new RevitFeed(designPeakHourFlow, head, measurementSystem);
         }
-        protected RevitFeed(VolumetricFlow designPeakHourFlow, Length head)
+        protected RevitFeed(VolumetricFlow designPeakHourFlow, Length head, String measurementSystem)
         {
-            PumpSelector = PumpSelector.Create(designPeakHourFlow, head);
+            PumpSelector = PumpSelector.Create(designPeakHourFlow, head, null, null, null, null, null, null, null, null, measurementSystem);
             Pipes = Pipes.Create(PumpSelector);
             PumpGeometry = PumpGeometry.Create(Pipes);
             Levels = Levels.Create(Pipes);
             PumpSumpGeometry = PumpSumpGeometry.Create();
             PumpSumpArrangement = PumpSumpArrangement.Create(PumpSelector, Pipes, PumpGeometry, PumpSumpGeometry, Levels);
             ValvePitGeometry = ValvePitGeometry.Create(PumpSelector, Pipes, PumpGeometry, PumpSumpArrangement);
-            MeasurementSystem = new String("Metric");
+            //MeasurementSystem = new String("Metric");
             MeasurementRange = new String($"0 - {(PumpSelector.Flow.GetValue("m3 h-1") * 1.1):F0} CMH");
         }
         public RevitFeed(
@@ -46,7 +46,7 @@ namespace LiftingStationRevitFeeder.Domain
                             int? numberOfPumps = 2,
                             Power? installedPower = default,
                             Power? powerConsumption = default,
-                            string? measurementSystem = "Metric",
+                            string? measurementSystem = default,
                             Length? dn1 = default,
                             Length? dn2 = default,
                             Length? dn3 = default,
@@ -108,7 +108,7 @@ namespace LiftingStationRevitFeeder.Domain
                             Length? civT = default,
                             Length? inletLocation = default,
                             string measurementRange = default
-                        ) : this(designPeakHourFlow, head)
+                        ) : this(designPeakHourFlow, head, measurementSystem)
         {
 
             PumpSelector = PumpSelector.Create(designPeakHourFlow, head, dutyPumpsCount, standbyPumpsCount, pumpInletVelocity, gravityPipeVelocity, pressurizedPipeVelocity, flow, installedPower, powerConsumption, measurementSystem);
@@ -118,7 +118,7 @@ namespace LiftingStationRevitFeeder.Domain
             PumpSumpArrangement = PumpSumpArrangement.Create(PumpSelector, Pipes, PumpGeometry, PumpSumpGeometry, Levels, dimK, dimL, dimM, dimN, dimO, dimP, dimQ, dimR, dimU, dimX, dimY, civL, civM, civI, civN, civO, civP, civQ, civF, civH, civG, civJ, civK, civS, civR, civT, inletLocation);
             PumpSumpGeometry = PumpSumpGeometry.Create();
             ValvePitGeometry = ValvePitGeometry.Create(PumpSelector, Pipes, PumpGeometry, PumpSumpArrangement, dimV, dimZ, dimW);
-            MeasurementSystem = new String("Metric");
+            //MeasurementSystem = new String("Metric");
             MeasurementRange = new String($"0 - {(PumpSelector.Flow.GetValue("m3 h-1") * 1.1):F0} CMH");
         }
 

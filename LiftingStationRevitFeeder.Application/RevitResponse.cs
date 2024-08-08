@@ -91,7 +91,11 @@ namespace LiftingStationRevitFeeder.Application
         public ResponseData CivR { get; private set; }
         public ResponseData CivT { get; private set; }
         public ResponseData InletLocation { get; private set; }
+        //ValvePitGeometry
 
+        public ResponseData DimV { get; private set; }
+        public ResponseData DimW { get; private set; }
+        public ResponseData DimZ { get; private set; }
 
 
         public RevitResponse()
@@ -180,6 +184,10 @@ namespace LiftingStationRevitFeeder.Application
             DNInlet = Mapper.MapFromMeasurementUnit("DNInlet", revitFeed.Pipes.DNInlet);
             DNBackflow = Mapper.MapFromMeasurementUnit("DNBackflow", revitFeed.Pipes.DNBackflow);
 
+        //ValvePitGeometry
+            DimV = Mapper.MapFromMeasurementUnit("DimV", revitFeed.ValvePitGeometry.DimV);
+            DimW = Mapper.MapFromMeasurementUnit("DimW", revitFeed.ValvePitGeometry.DimW);
+            DimZ = Mapper.MapFromMeasurementUnit("DimZ", revitFeed.ValvePitGeometry.DimZ);
         }
 
     }
