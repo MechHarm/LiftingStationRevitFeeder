@@ -21,7 +21,10 @@
         {
             return new ResponseData(name, value, dataType);
         }
-
+        public static ResponseData CreateNotMeasurementUnitString(string name, string value, string dataType)
+        {
+            return new ResponseData(name, value, dataType);
+        }
         public static ResponseData CreateMeasurementUnit(string name, string value, string unit, string dataType)
         {
             return new ResponseData(name, value, dataType, unit);

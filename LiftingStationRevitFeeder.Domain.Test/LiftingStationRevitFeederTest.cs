@@ -53,8 +53,8 @@ namespace LiftingStationRevitFeeder.Domain.Test
             sut.ValvePitGeometry.DimV.GetValue().Should().Be(400);
             sut.ValvePitGeometry.DimZ.GetValue().Should().Be(5650);
             sut.ValvePitGeometry.DimW.GetValue().Should().Be(5675);
-            sut.PumpSumpArrangement.MinLSWallDistanceX.GetValue().Should().Be(3900);
-            sut.PumpSumpArrangement.MinLSWallDistanceY.GetValue().Should().Be(2860);
+            sut.PumpSumpArrangement.DimX.GetValue().Should().Be(3900);
+            sut.PumpSumpArrangement.DimY.GetValue().Should().Be(2860);
         }
         [Test]
         public void LiftingStationRevitFeederTest_WhenBaseparametersWithoutOptionals_ExpectedValuesAreSet()
@@ -104,8 +104,8 @@ namespace LiftingStationRevitFeeder.Domain.Test
             sut.ValvePitGeometry.DimV.GetValue().Should().Be(400);
             sut.ValvePitGeometry.DimZ.GetValue().Should().Be(4400);
             sut.ValvePitGeometry.DimW.GetValue().Should().Be(5065);
-            sut.PumpSumpArrangement.MinLSWallDistanceX.GetValue().Should().Be(3600);
-            sut.PumpSumpArrangement.MinLSWallDistanceY.GetValue().Should().Be(2240);
+            sut.PumpSumpArrangement.DimX.GetValue().Should().Be(3600);
+            sut.PumpSumpArrangement.DimY.GetValue().Should().Be(2240);
         }
     }
 }

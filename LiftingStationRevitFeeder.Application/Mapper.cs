@@ -10,5 +10,7 @@ namespace LiftingStationRevitFeeder.Application
                 : ResponseData.CreateMeasurementUnit(denomination, measurementUnit.Value.ToString(), measurementUnit.GetUnit(), measurementUnit.GetType().Name.ToString());
         public static ResponseData MapFromInt(string denomination, int q)
             => ResponseData.CreateNotMeasurementUnit(denomination, q.ToString(), q.GetType().Name.ToString());
+        public static ResponseData MapFromString(string denomination, string q)
+            => ResponseData.CreateNotMeasurementUnitString(denomination, q.ToString(), q.GetType().Name.ToString());
     }
 }

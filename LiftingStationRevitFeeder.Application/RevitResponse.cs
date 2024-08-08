@@ -112,6 +112,7 @@ namespace LiftingStationRevitFeeder.Application
             GravityPipeVelocity = Mapper.MapFromMeasurementUnit("GravityPipeVelocity", revitFeed.PumpSelector.GravityPipeVelocity);
             InstalledPower = Mapper.MapFromMeasurementUnit("InstalledPower", revitFeed.PumpSelector.InstalledPower);
             PowerConsumption = Mapper.MapFromMeasurementUnit("PowerConsumption", revitFeed.PumpSelector.PowerConsumption);
+            MeasurementSystem = Mapper.MapFromString("MeasurementSystem", revitFeed.PumpSelector.MeasurementSystem);
 
             // PumpGeometry
             DimA = Mapper.MapFromMeasurementUnit("DimA", revitFeed.PumpGeometry.DimA);

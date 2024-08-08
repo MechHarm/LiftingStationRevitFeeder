@@ -3,12 +3,12 @@ using LiftingStationRevitFeeder.Application;
 using LiftingStationRevitFeeder.Domain;
 using MeasurementUnits.NET;
 const int numberOfStepsInFlow = 20;
-const int numberOfStepsInHead = 2;
+const int numberOfStepsInHead = 1;
 
 var flowMin = 20d;
 var flowMax = 1000d;
-var headMin = 1d;
-var headMax = 5d;
+var headMin = 10d;
+var headMax = 20d;
 
 var flowList = new List<VolumetricFlow>();
 var flowStep = (flowMax - flowMin) / numberOfStepsInFlow;
@@ -33,7 +33,8 @@ foreach (var currentFlow in flowList)
         s++;
         var revitFeed = RevitFeed.CreateBase(currentFlow, currentHead);
         var output = new RevitResponse(revitFeed);
-        JsonHelper<RevitResponse>.WriteToJsonFile($"c:\\Temp\\BaseInput-Flow{currentFlow.Value}-Head{currentHead.Value}.json ", output);
+        JsonHelper<RevitResponse>.WriteToJsonFile($"c:\\Temp\\BaseInput-Flow{currentFlow.Value}.json ", output);
+        // JsonHelper<RevitResponse>.WriteToJsonFile($"c:\\Temp\\BaseInput-Flow{currentFlow.Value}-Head{currentHead.Value}.json ", output);
     }
 }
 
