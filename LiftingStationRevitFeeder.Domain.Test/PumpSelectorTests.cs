@@ -38,9 +38,11 @@ namespace LiftingStationRevitFeeder.Domain.Test
             // Arrange
             var designPeakHourFlow = new VolumetricFlow(1, "m3 s-1");
             var head = new Length(1, "m");
+            var dutyPumpsCount = 1;
+            var standbyPumpsCount = 1;
 
             // Act
-            var result = PumpSelector.Create(designPeakHourFlow, head);
+            var result = PumpSelector.Create(designPeakHourFlow, head, dutyPumpsCount, standbyPumpsCount);
 
             // Assert
             result.DesignPeakHourFlow.Should().BeEquivalentTo(designPeakHourFlow);

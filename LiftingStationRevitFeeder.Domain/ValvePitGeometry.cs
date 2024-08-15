@@ -12,7 +12,7 @@ namespace LiftingStationRevitFeeder.Domain
         {
             DimV = dimV ?? new Length(400, "mm");
             DimZ = dimZ ?? GetPumpDimensionZ(pumpSelector, pipes, pumpGeometry, pumpSumpArrangement);
-            DimW = dimW ?? pumpSumpArrangement.DimN + pumpSumpArrangement.DimO + pumpSumpArrangement.DimP + pumpSumpArrangement.DimQ + pumpSumpArrangement.DimU + DimV + pumpSumpArrangement.DimR;
+            DimW = dimW ?? pumpSumpArrangement.DimO + pumpSumpArrangement.DimP + pumpSumpArrangement.DimQ + pumpSumpArrangement.DimR;
 
         }
         public static ValvePitGeometry Create(PumpSelector pumpSelector, Pipes pipes, PumpGeometry pumpGeometry, PumpSumpArrangement pumpSumpArrangement, Length? dimV = default, Length? dimZ = default, Length? dimW = default)

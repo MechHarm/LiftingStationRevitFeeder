@@ -89,7 +89,6 @@ namespace LiftingStationRevitFeeder.Application
         public ResponseData CivK { get; private set; }
         public ResponseData CivS { get; private set; }
         public ResponseData CivR { get; private set; }
-        public ResponseData CivT { get; private set; }
         public ResponseData InletLocation { get; private set; }
         //ValvePitGeometry
 
@@ -171,7 +170,6 @@ namespace LiftingStationRevitFeeder.Application
             CivK = Mapper.MapFromMeasurementUnit("CivK", revitFeed.PumpSumpArrangement.CivK);
             CivS = Mapper.MapFromMeasurementUnit("CivS", revitFeed.PumpSumpArrangement.CivS);
             CivR = Mapper.MapFromMeasurementUnit("CivR", revitFeed.PumpSumpArrangement.CivR);
-            CivT = Mapper.MapFromMeasurementUnit("CivT", revitFeed.PumpSumpArrangement.CivT);
             InletLocation = Mapper.MapFromMeasurementUnit("InletLocation", revitFeed.PumpSumpArrangement.InletLocation);
 
         //Pipes

@@ -13,8 +13,11 @@ namespace LiftingStationRevitFeeder.Domain.Test
             var designPeakHourFlow = new VolumetricFlow(250, "m3 h-1");
             var head = new Length(5, "m");
             var measurementSystem = new String("Metric");
+            int dutyPumpsCount = 2;
+            int standbyPumpsCount = 1;
+
             // act
-            var sut = RevitFeed.CreateBase(designPeakHourFlow, head, measurementSystem);
+            var sut = RevitFeed.CreateBase(designPeakHourFlow, head, dutyPumpsCount, standbyPumpsCount, measurementSystem);
 
             // assert
             sut.Should().NotBeNull();
@@ -63,9 +66,12 @@ namespace LiftingStationRevitFeeder.Domain.Test
             var designPeakHourFlow = new VolumetricFlow(100, "m3 h-1");
             var flow = new VolumetricFlow(100, "m3 h-1");
             var head = new Length(5, "m");
+            int dutyPumpsCount = 2;
+            int standbyPumpsCount = 1;
+            int numberOfPumps = dutyPumpsCount + standbyPumpsCount;
 
             // act
-            var sut = new RevitFeed(designPeakHourFlow, flow, head, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null);
+            var sut = new RevitFeed(designPeakHourFlow, flow, head, null, null, null, dutyPumpsCount, standbyPumpsCount, numberOfPumps, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null);
 
             // assert
             sut.Should().NotBeNull();

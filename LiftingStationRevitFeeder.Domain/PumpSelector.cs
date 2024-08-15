@@ -1,5 +1,4 @@
 ﻿using MeasurementUnits.NET;
-
 namespace LiftingStationRevitFeeder.Domain
 {
     public class PumpSelector
@@ -21,8 +20,8 @@ namespace LiftingStationRevitFeeder.Domain
         protected PumpSelector(
             VolumetricFlow designPeakHourFlow,
             Length head,
-            int dutyPumpsCount = 1,
-            int standbyPumpsCount = 1,
+            int dutyPumpsCount,
+            int standbyPumpsCount,
             Velocity? pumpInletVelocity = default,
             Velocity? gravityPipeVelocity = default,
             Velocity? pressurizedPipeVelocity = default,
@@ -47,8 +46,8 @@ namespace LiftingStationRevitFeeder.Domain
         public static PumpSelector Create(
             VolumetricFlow designPeakHourFlow,
             Length head,
-            int? dutyPumpsCount = 1,
-            int? standbyPumpsCount = 1,
+            int dutyPumpsCount,
+            int standbyPumpsCount,
             Velocity? pumpInletVelocity = null,
             Velocity? gravityPipeVelocity = null,
             Velocity? pressurizedPipeVelocity = null,
@@ -60,8 +59,8 @@ namespace LiftingStationRevitFeeder.Domain
             var result = new PumpSelector(
             designPeakHourFlow,
             head,
-            dutyPumpsCount ?? 1,
-            standbyPumpsCount ?? 1,
+            dutyPumpsCount,
+            standbyPumpsCount,
             pumpInletVelocity,
             gravityPipeVelocity,
             pressurizedPipeVelocity,

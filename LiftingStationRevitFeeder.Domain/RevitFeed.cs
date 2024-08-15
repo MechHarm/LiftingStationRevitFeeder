@@ -17,14 +17,14 @@ namespace LiftingStationRevitFeeder.Domain
         public string MeasurementSystem { get; private set; }
 
 
-        public static RevitFeed CreateBase(VolumetricFlow designPeakHourFlow, Length head, String measurementSystem)
+        public static RevitFeed CreateBase(VolumetricFlow designPeakHourFlow, Length head, int dutyPumpsCount, int standbyPumpsCount, String measurementSystem)
         {
-            var pumpSelection = PumpSelector.Create(designPeakHourFlow, head, null, null, null, null, null, null, null, null, measurementSystem);
-            return new RevitFeed(designPeakHourFlow, head, measurementSystem);
+            var pumpSelection = PumpSelector.Create(designPeakHourFlow, head, dutyPumpsCount, standbyPumpsCount, null, null, null, null, null, null, measurementSystem);
+            return new RevitFeed(designPeakHourFlow, head, dutyPumpsCount, standbyPumpsCount, measurementSystem);
         }
-        protected RevitFeed(VolumetricFlow designPeakHourFlow, Length head, String measurementSystem)
+        protected RevitFeed(VolumetricFlow designPeakHourFlow, Length head, int dutyPumpsCount, int standbyPumpsCount, String measurementSystem)
         {
-            PumpSelector = PumpSelector.Create(designPeakHourFlow, head, null, null, null, null, null, null, null, null, measurementSystem);
+            PumpSelector = PumpSelector.Create(designPeakHourFlow, head, dutyPumpsCount, standbyPumpsCount, null, null, null, null, null, null, measurementSystem);
             Pipes = Pipes.Create(PumpSelector);
             PumpGeometry = PumpGeometry.Create(Pipes);
             Levels = Levels.Create(Pipes);
@@ -41,9 +41,9 @@ namespace LiftingStationRevitFeeder.Domain
                             Velocity? pumpInletVelocity,
                             Velocity? pressurizedPipeVelocity,
                             Velocity? gravityPipeVelocity,
-                            int? dutyPumpsCount = 1,
-                            int? standbyPumpsCount = 1,
-                            int? numberOfPumps = 2,
+                            int dutyPumpsCount,
+                            int standbyPumpsCount,
+                            int numberOfPumps,
                             Power? installedPower = default,
                             Power? powerConsumption = default,
                             string? measurementSystem = default,
@@ -105,17 +105,16 @@ namespace LiftingStationRevitFeeder.Domain
                             Length? civK = default,
                             Length? civS = default,
                             Length? civR = default,
-                            Length? civT = default,
                             Length? inletLocation = default,
                             string measurementRange = default
-                        ) : this(designPeakHourFlow, head, measurementSystem)
+                        ) : this(designPeakHourFlow, head, dutyPumpsCount, standbyPumpsCount, measurementSystem)
         {
 
             PumpSelector = PumpSelector.Create(designPeakHourFlow, head, dutyPumpsCount, standbyPumpsCount, pumpInletVelocity, gravityPipeVelocity, pressurizedPipeVelocity, flow, installedPower, powerConsumption, measurementSystem);
             Pipes = Pipes.Create(PumpSelector, dn1, dn2, dn3, dn4, dn5, dnBreath, dnInlet, dnBackflow);
             PumpGeometry = PumpGeometry.Create(Pipes, dimA, dimB, dimC, dimD, dimE, dimF, dimG, dimH, dimI, dimJ);
             Levels = Levels.Create(Pipes, dimS, dimT);
-            PumpSumpArrangement = PumpSumpArrangement.Create(PumpSelector, Pipes, PumpGeometry, PumpSumpGeometry, Levels, dimK, dimL, dimM, dimN, dimO, dimP, dimQ, dimR, dimU, dimX, dimY, civL, civM, civI, civN, civO, civP, civQ, civF, civH, civG, civJ, civK, civS, civR, civT, inletLocation);
+            PumpSumpArrangement = PumpSumpArrangement.Create(PumpSelector, Pipes, PumpGeometry, PumpSumpGeometry, Levels, dimK, dimL, dimM, dimN, dimO, dimP, dimQ, dimR, dimU, dimX, dimY, civL, civM, civI, civN, civO, civP, civQ, civF, civH, civG, civJ, civK, civS, civR, inletLocation);
             PumpSumpGeometry = PumpSumpGeometry.Create();
             ValvePitGeometry = ValvePitGeometry.Create(PumpSelector, Pipes, PumpGeometry, PumpSumpArrangement, dimV, dimZ, dimW);
             //MeasurementSystem = new String("Metric");

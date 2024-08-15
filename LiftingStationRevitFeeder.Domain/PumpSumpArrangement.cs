@@ -29,7 +29,6 @@ namespace LiftingStationRevitFeeder.Domain
         public Length? CivK { get; private set; }
         public Length? CivS { get; private set; }
         public Length? CivR { get; private set; }
-        public Length? CivT { get; private set; }
         public Length? InletLocation { get; private set; }
 
         protected PumpSumpArrangement(
@@ -63,7 +62,6 @@ namespace LiftingStationRevitFeeder.Domain
             Length? civK = default,
             Length? civS = default,
             Length? civR = default,
-            Length? civT = default,
             Length? inletLocation = default
             )
         {
@@ -88,11 +86,10 @@ namespace LiftingStationRevitFeeder.Domain
             CivQ = GetValveManholePosition();
             CivH = GetCivHDimension();
             CivG = GetCivGDimension(levels, pipes);
-            CivJ = GetBaffleWallOpening(pipes);
-            CivK = GetBaffleWallOpening(pipes);
+            CivJ = GetBaffleWallOpening(/*pipes*/pumpSelector);
+            CivK = GetBaffleWallOpening(/*pipes*/pumpSelector);
             CivS = GetFlowmeterManholeY(pipes);
             CivR = GetFlowmeterManholeX(pipes);
-            CivT = GetFlowmeterManholePosition(pipes);
             InletLocation = GetInletPosition();
         }
         public static PumpSumpArrangement Create(
@@ -126,11 +123,10 @@ namespace LiftingStationRevitFeeder.Domain
             Length? civK = default,
             Length? civS = default,
             Length? civR = default,
-            Length? civT = default,
             Length? inletLocation = default)
         {
             return new PumpSumpArrangement(
-             pumpSelector, pipes, pumpGeometry, pumpSumpGeometry, levels, dimK, dimL, dimM, dimN, dimO, dimP, dimQ, dimR, dimU, dimX, dimY, civL, civM, civI, civN, civO, civP, civQ, civF, civH, civG, civJ, civK, civS, civR, civT, inletLocation);
+             pumpSelector, pipes, pumpGeometry, pumpSumpGeometry, levels, dimK, dimL, dimM, dimN, dimO, dimP, dimQ, dimR, dimU, dimX, dimY, civL, civM, civI, civN, civO, civP, civQ, civF, civH, civG, civJ, civK, civS, civR, inletLocation);
         }
         private Length GetPumpDimensionO(Pipes pipes) => pipes.DN3.Value < 80 ? new Length(500 + Math.Ceiling(pipes.DN3.Value / 4) * 10, "mm")
                                           : pipes.DN3.Value < 125 ? new Length(500 + Math.Ceiling(pipes.DN3.Value / 6) * 10, "mm")
@@ -144,8 +140,6 @@ namespace LiftingStationRevitFeeder.Domain
            new Length(Math.Max(500, pipes.DNInlet.Value * 1.5), "mm");
         private Length GetMinimumLSWallDistanceX(PumpSelector pumpSelector, PumpGeometry pumpGeometry) =>
          new Length(2 * DimK.Value + pumpSelector.NumberOfPumps * pumpGeometry.DimH.Value + (pumpSelector.NumberOfPumps - 1) * DimL.Value, "mm");
-        private Length GetMinimumLSWallDistanceY(PumpGeometry pumpGeometry) =>
-            new Length((Math.Round((DimM.Value + pumpGeometry.DimE.Value + pumpGeometry.DimF.Value + pumpGeometry.DimG.Value + pumpGeometry.DimH.Value / 2) / 10) * 10) + Math.Max(200 + CivF.Value, 800), "mm");
         private Length GetManholeY(PumpGeometry pumpGeometry) =>
            new Length((Math.Round((pumpGeometry.DimE.Value + pumpGeometry.DimF.Value + pumpGeometry.DimH.Value / 2 + pumpGeometry.DimJ.Value) / 100) * 100) + 100, "mm");
         private Length GetManholeX(PumpGeometry pumpGeometry) =>
@@ -166,14 +160,15 @@ namespace LiftingStationRevitFeeder.Domain
            new Length(Math.Round(((DimY.Value - CivI.Value + CivF.Value) * Math.Tan(10 * Math.PI / 180) + 500) / 10) * 10, "mm");
         private Length GetCivGDimension(Levels levels, Pipes pipes) =>
            new Length(levels.WetWellDepth.Value - CivH.Value - levels.LevA.Value + pipes.DNInlet.Value, "mm");
-        private Length GetBaffleWallOpening(Pipes pipes) =>
-           new Length(Math.Min(Math.Max(300, Math.Ceiling((pipes.DN1.Value * 1.5) / 100) * 100), CivF.Value), "mm");
+        private Length GetBaffleWallOpening(/*Pipes pipes*/ PumpSelector pumpSelector) =>
+            new Length(Math.Min(Math.Max(200, Math.Ceiling(Math.Sqrt(pumpSelector.Flow.Value / 1750) / 10) * 10), CivF.Value), "mm");
+            //new Length(Math.Min(Math.Max(300, Math.Ceiling((pipes.DN1.Value * 1.5) / 100) * 100), CivF.Value), "mm");
         private Length GetFlowmeterManholeY(Pipes pipes) =>
            new Length(Math.Max(300, Math.Ceiling((pipes.DN5.Value * 3) / 100) * 100), "mm");
         private Length GetFlowmeterManholeX(Pipes pipes) => pipes.DN5.Value < 200 ? new Length(500, "mm")
                                             : pipes.DN5.Value < 300 ? new Length(800, "mm")
                                             : new Length(1000, "mm");
-        private Length GetFlowmeterManholePosition(Pipes pipes) =>
-          new Length(pipes.DN4.Value * 5, "mm");
+        private Length GetMinimumLSWallDistanceY(PumpGeometry pumpGeometry) =>
+            new Length(Math.Max((Math.Round((DimM.Value + pumpGeometry.DimE.Value + pumpGeometry.DimF.Value + pumpGeometry.DimG.Value + pumpGeometry.DimH.Value / 2) / 10) * 10) + 500,2000) + 200 + CivF.Value, "mm");
     }
 }

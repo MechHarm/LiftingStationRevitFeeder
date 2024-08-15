@@ -18,9 +18,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Compile Update="LiftStationSizer.cs">
-      <SubType>Form</SubType>
-    </Compile>
+    <Compile Update="LiftStationSizer.cs" />
   </ItemGroup>
 
 </Project>
